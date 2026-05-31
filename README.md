@@ -202,9 +202,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you have any questions or need further clarification, please contact my email/ Linkedin .
 
-- **💌 Email : pranto113015@gmail.com**
+- **💌 Email : abhisekpanigrahy79@gmail.com**
 
-- **🕵️‍♂️ Linkedin : [Pranto Kumar](https://www.linkedin.com/in/pranto-kumar-a326801b3/)**
+- **🕵️‍♂️ Linkedin : [Abhisek Panigrahy](https://www.linkedin.com/in/abhisek-panigrahy-754877228/)**
 
 **⭐ If you found this project helpful, please give it a star!**
 

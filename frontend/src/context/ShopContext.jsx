@@ -20,7 +20,7 @@ const ShopContextProvider = (props) => {
   // for products state
   const [cartItems, setCartItems] = useState({});
 
-  const [products, setProducts] = useState(localProducts);
+  const [products, setProducts] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [userData, setUserData] = useState(JSON.parse(localStorage.getItem("userData")) || null);
 

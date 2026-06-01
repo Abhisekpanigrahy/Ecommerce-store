@@ -30,8 +30,8 @@ const addProduct = async (req, res) => {
                     });
                     return result.secure_url;
                 } catch (error) {
-                    console.log('Cloudinary upload failed, using local image:', error.message);
-                    return `${req.protocol}://${req.get('host')}/uploads/${item.filename}`;
+                    console.error('Cloudinary upload failed:', error.message, error.http_code || error);
+                    throw new Error('Cloudinary upload failed: ' + error.message);
                 }
             })
         )
@@ -148,7 +148,8 @@ const updateProduct = async (req, res) => {
                         });
                         return result.secure_url;
                     } catch (error) {
-                        return `${req.protocol}://${req.get('host')}/uploads/${item.filename}`;
+                        console.error('Cloudinary upload failed:', error.message, error.http_code || error);
+                        throw new Error('Cloudinary upload failed: ' + error.message);
                     }
                 })
             );

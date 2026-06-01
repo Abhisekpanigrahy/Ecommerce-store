@@ -109,13 +109,13 @@ const Cart = () => {
           <CartTotal />
 
           <div className="w-full text-end">
-            <button
-              onClick={() => navigate("/place-order")}
-              className="bg-black text-white text-sm my-8 px-8 py-3"
-            >
-              PROCEED TO CHECKOUT
-            </button>
-          </div>
+              <button
+                onClick={() => navigate("/place-order")}
+                className="bg-accent text-white text-sm my-8 px-8 py-3 hover:shadow-lg transition-all"
+              >
+                PROCEED TO CHECKOUT
+              </button>
+            </div>
         </div>
       </div>
     </div>

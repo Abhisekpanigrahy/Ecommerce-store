@@ -54,39 +54,38 @@ function Navbar() {
   }, []);
 
   return (
-    <div className="flex items-center justify-between py-5 font-medium">
-      <Link to={"/"} className="flex items-center gap-1">
-        <p className="text-2xl font-bold tracking-tighter text-gray-800 uppercase">ELITE WEAR<span className="text-pink-500">.</span></p>
+    <div className="flex items-center justify-between py-5 font-medium border-b border-accent/20">
+      <Link to={"/"} className="flex items-center gap-1 group">
+        <p className="text-2xl font-bold tracking-tighter text-earth-gray uppercase group-hover:text-accent transition-colors duration-300">ELITE WEAR<span className="text-accent">.</span></p>
       </Link>
 
-      <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
-        <NavLink to="/" className="flex flex-col items-center gap-1">
-          <p>HOME</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+      <ul className="hidden sm:flex gap-8 text-xs tracking-widest text-earth-gray/70">
+        <NavLink to="/" className="flex flex-col items-center gap-1 group">
+          <p className="group-hover:text-accent transition-colors">HOME</p>
+          <hr className="w-full border-none h-[1px] bg-accent hidden group-[.active]:block" />
         </NavLink>
-        <NavLink to="/collection" className="flex flex-col items-center gap-1">
-          <p>COLLECTION</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+        <NavLink to="/collection" className="flex flex-col items-center gap-1 group">
+          <p className="group-hover:text-accent transition-colors">COLLECTION</p>
+          <hr className="w-full border-none h-[1px] bg-accent hidden group-[.active]:block" />
         </NavLink>
-        <NavLink to="/about" className="flex flex-col items-center gap-1">
-          <p>ABOUT</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+        <NavLink to="/about" className="flex flex-col items-center gap-1 group">
+          <p className="group-hover:text-accent transition-colors">ABOUT</p>
+          <hr className="w-full border-none h-[1px] bg-accent hidden group-[.active]:block" />
         </NavLink>
-        <NavLink to="/contact" className="flex flex-col items-center gap-1">
-          <p>CONTACT</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+        <NavLink to="/contact" className="flex flex-col items-center gap-1 group">
+          <p className="group-hover:text-accent transition-colors">CONTACT</p>
+          <hr className="w-full border-none h-[1px] bg-accent hidden group-[.active]:block" />
         </NavLink>
 
         <a
           target="_blank"
           rel="noreferrer"
           href={adminUrl}
-          className="flex flex-col items-center gap-1 "
+          className="flex flex-col items-center gap-1 group"
         >
-          <span className="border px-5 text-sm py-1 rounded-full -mt-1">
-            Admin Panel
+          <span className="border border-accent/40 px-4 text-[10px] py-1 rounded-sm -mt-0.5 group-hover:bg-accent group-hover:text-white transition-all duration-300">
+            ADMIN
           </span>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </a>
       </ul>
 
@@ -94,7 +93,7 @@ function Navbar() {
         <img
           onClick={openSearch}
           src={assets.search_icon}
-          className="w-5 h-5 cursor-pointer object-contain"
+          className="w-4 h-4 cursor-pointer object-contain opacity-70 hover:opacity-100 transition-opacity"
           alt="searchIcon"
         />
 

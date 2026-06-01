@@ -51,7 +51,7 @@ const ProducItem = ({ id, image, name, price, averageRating = 0, reviewCount = 0
         </div>
 
         <div className="px-4 pb-4 pt-4">
-          <p className="text-sm font-semibold text-gray-900 line-clamp-2">{name}</p>
+          <p className="text-sm font-semibold text-gray-900 line-clamp-2 sm:line-clamp-1">{name}</p>
 
           <div className="mt-3 flex flex-col gap-3">
             <div className="flex items-center gap-2">

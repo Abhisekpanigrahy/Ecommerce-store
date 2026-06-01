@@ -14,8 +14,10 @@ import newsletterRouter from './routes/newsletterRoute.js';
 //  app congig 
 const app = express();
 const port = process.env.PORT || 4000;
-connectDB();
-connectCloudinary();
+
+// Connect to Database and Cloudinary
+await connectDB();
+await connectCloudinary();
 
 
 // middlewares

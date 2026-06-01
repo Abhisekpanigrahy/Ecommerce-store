@@ -1,17 +1,23 @@
 import mongoose from "mongoose";
 
+let isConnected = false;
+
 const connectDB = async () => {
+    if (isConnected) {
+        console.log('Using existing MongoDB connection');
+        return;
+    }
+
     try {
         mongoose.connection.on('connected', () => {
+            isConnected = true;
             console.log('MongoDB Connected successfully');
         });
 
         mongoose.connection.on('error', (err) => {
+            isConnected = false;
             console.error('MongoDB connection error:', err);
         });
-
-        // Enable buffering again to handle initial connection delay gracefully
-        mongoose.set('bufferCommands', true);
 
         if (!process.env.MONGODB_URL) {
             throw new Error("MONGODB_URL is not defined in environment variables");
@@ -23,13 +29,15 @@ const connectDB = async () => {
             : `${process.env.MONGODB_URL}/e-commerce`;
 
         await mongoose.connect(connectionUrl, {
-            serverSelectionTimeoutMS: 10000, // Increase to 10 seconds
+            serverSelectionTimeoutMS: 15000, // Increase to 15 seconds for slower networks
             socketTimeoutMS: 45000,
             family: 4
         });
+        
+        isConnected = true;
     } catch (error) {
+        isConnected = false;
         console.error("Failed to connect to MongoDB:", error.message);
-        // Don't exit process in serverless, but log it clearly
     }
 }
 

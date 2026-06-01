@@ -20,7 +20,7 @@ const ShopContextProvider = (props) => {
   // for products state
   const [cartItems, setCartItems] = useState({});
 
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(localProducts);
   const [token, setToken] = useState("");
   const [userData, setUserData] = useState(null);
 
@@ -173,14 +173,14 @@ const ShopContextProvider = (props) => {
 
         setProducts(productsWithImages);
       } else {
-        toast.error(response.data.message);
+        console.log("API Error:", response.data.message);
         // Fallback to local products if API succeeds but returns error
         setProducts(localProducts);
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-      // Fallback to local products if API call itself fails
+      console.log("Product fetch error:", error);
+      // Fallback to local products is already handled by initial state,
+      // but we ensure it here too.
       setProducts(localProducts);
     }
   };

@@ -175,10 +175,14 @@ const ShopContextProvider = (props) => {
         setProducts(productsWithImages);
       } else {
         toast.error(response.data.message);
+        // Fallback to local products if API succeeds but returns error
+        setProducts(localProducts);
       }
     } catch (error) {
       console.log(error);
       toast.error(error.message);
+      // Fallback to local products if API call itself fails
+      setProducts(localProducts);
     }
   };
 

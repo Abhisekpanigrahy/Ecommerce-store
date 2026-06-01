@@ -142,19 +142,42 @@ const ShopContextProvider = (props) => {
       const response = await axios.get(backendUrl + "/api/product/list");
 
       if (response.data.success) {
-        const productsWithImages = response.data.products.map((product, index) => {
-            const hasRemoteImage =
-              Array.isArray(product.image) &&
-              product.image.length > 0 &&
-              Boolean(product.image[0]);
+        const normalizeImageUrl = (url) => {
+          if (!url) return url;
+          // already absolute
+          if (/^https?:\/\//i.test(url)) return url;
+          // protocol-relative //example.com/.. -> https://example.com/..
+          if (/^\/\//.test(url)) return (window?.location?.protocol || "https:") + url;
+          // absolute path on server: /uploads/.. -> prepend backendUrl
+          if (/^\//.test(url)) {
+            const proto = window?.location?.protocol || "https:";
+            let base = backendUrl;
+            if (proto === "https:" && base.startsWith("http:")) base = base.replace(/^http:/, "https:");
+            return base + url;
+          }
+          // relative path (no leading slash) -> treat as relative to backend
+          if (!/^data:|^blob:/.test(url)) {
+            let base = backendUrl;
+            if ((window?.location?.protocol || "https:") === "https:" && base.startsWith("http:")) {
+              base = base.replace(/^http:/, "https:");
+            }
+            return base + "/" + url;
+          }
+          return url;
+        };
 
-            // Use remote image if present; fallback to local asset only when image missing or empty
-            return hasRemoteImage
-              ? product
-              : {
-                  ...product,
-                  image: localProducts[index % localProducts.length].image,
-                };
+        const productsWithImages = response.data.products.map((product, index) => {
+          const hasRemoteImage = Array.isArray(product.image) && product.image.length > 0 && Boolean(product.image[0]);
+
+          if (hasRemoteImage) {
+            const images = product.image.map((img) => normalizeImageUrl(img));
+            return { ...product, image: images };
+          }
+
+          return {
+            ...product,
+            image: localProducts[index % localProducts.length].image,
+          };
         });
 
         setProducts(productsWithImages);

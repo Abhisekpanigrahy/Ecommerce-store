@@ -37,12 +37,13 @@ const Product = () => {
                 key={index}
                 className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
                 alt="product_image"
+                loading="lazy"
               />
             ))}
           </div>
 
           <div className="w-4 sm:w-[80%]">
-            <img src={image} className="w-full h-auto" alt="product_img" />
+            <img src={image} className="w-full h-auto" alt="product_img" fetchpriority="high" />
           </div>
         </div>
 

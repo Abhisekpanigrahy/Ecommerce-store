@@ -33,13 +33,11 @@ const Login = ({ setToken }) => {
     <div className="min-h-screen flex items-center justify-center w-full">
       <div className="bg-white shadow-md rounded-lg px-8 py-6 max-w-md">
         {/* Logo/Image */}
-        <img
-          src={assets.logo_login}
-          alt="Admin Logo"
-          className="mx-auto mb-1 w-50 h-15 object-contain "
-        />
+        <div className="flex flex-col items-center mb-6">
+          <p className="text-3xl font-bold tracking-tighter text-gray-800 uppercase">ELITE WEAR<span className="text-pink-500">.</span></p>
+          <p className="text-[12px] text-pink-500 font-medium tracking-widest -mt-1 uppercase">Admin Panel</p>
+        </div>
 
-        <h1 className="text-2xl font-bold mb-4 text-center">Admin Panel</h1>
         <form onSubmit={onSubmitHandler}>
           {/* Email Field */}
           <div className="mb-3 min-w-72">

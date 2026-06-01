@@ -85,7 +85,7 @@ const Orders = ({ token }) => {
               {order.items.length > 0 ? (
                 <div className={`grid ${order.items.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} gap-0.5 w-full h-full p-1`}>
                   {order.items.slice(0, 4).map((item, idx) => (
-                    <img key={idx} src={item.image[0]} className="w-full h-full object-cover rounded-sm bg-white" alt="" />
+                    <img key={idx} src={item.image[0]} className="w-full h-full object-cover rounded-sm bg-white" alt="" loading="lazy" />
                   ))}
                 </div>
               ) : (

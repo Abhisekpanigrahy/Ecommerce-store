@@ -12,10 +12,10 @@ const About = () => {
 
       <div className='my-10 flex flex-col md:flex-row gap-16'>
         
-        <img className='w-full md:max-w-[450px]' src={assets.about_img} alt="about_img" />
+        <img className='w-full md:max-w-[450px]' src={assets.about_img} alt="about_img" loading="lazy" />
         
         <div className='flex flex-col justify-center gap-6 md:w-2/4 text-gray-600'>
-          <p>Forever was born out of a passion for style and a desire to provide high-quality fashion to everyone. We believe that what you wear is an extension of your personality, and we are here to help you express yourself through our carefully selected pieces.</p>
+          <p>ELITE WEAR. was born out of a passion for style and a desire to provide high-quality fashion to everyone. We believe that what you wear is an extension of your personality, and we are here to help you express yourself through our carefully selected pieces.</p>
 
           <p>Our journey started with a simple idea: to make premium shopping accessible and enjoyable. Today, we continue to innovate and grow, always keeping our customers at the heart of everything we do.</p>
 

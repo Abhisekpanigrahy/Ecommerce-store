@@ -51,15 +51,15 @@ const subscribeNewsletter = async (req, res) => {
         await transporter.sendMail({
             from: SMTP_FROM || smtpUser,
             to: email,
-            subject: 'Welcome to Forever - Your 20% off update',
-            text: `Hi,\n\nThanks for subscribing to Forever.\n\nYou will receive new arrivals, exclusive offers, and style updates from our store. Your 20% off subscriber offer is ready for your next order.\n\nBest regards,\nForever`,
+            subject: 'Welcome to ELITE WEAR. - Your 20% off update',
+            text: `Hi,\n\nThanks for subscribing to ELITE WEAR.\n\nYou will receive new arrivals, exclusive offers, and style updates from our store. Your 20% off subscriber offer is ready for your next order.\n\nBest regards,\nELITE WEAR.`,
             html: `
                 <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1f2937;">
-                    <h2>Welcome to Forever</h2>
-                    <p>Thanks for subscribing to Forever.</p>
+                    <h2>Welcome to ELITE WEAR.</h2>
+                    <p>Thanks for subscribing to ELITE WEAR.</p>
                     <p>You will receive new arrivals, exclusive offers, and style updates from our store.</p>
                     <p><strong>Your 20% off subscriber offer is ready for your next order.</strong></p>
-                    <p>Best regards,<br/>Forever</p>
+                    <p>Best regards,<br/>ELITE WEAR.</p>
                 </div>
             `,
         });

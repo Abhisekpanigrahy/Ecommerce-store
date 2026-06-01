@@ -23,7 +23,11 @@ const addProduct = async (req, res) => {
 
             images.map(async (item) => {
                 try {
-                    let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+                    let result = await cloudinary.uploader.upload(item.path, { 
+                        resource_type: 'image',
+                        quality: 'auto',
+                        fetch_format: 'auto'
+                    });
                     return result.secure_url;
                 } catch (error) {
                     console.log('Cloudinary upload failed, using local image:', error.message);
@@ -137,7 +141,11 @@ const updateProduct = async (req, res) => {
             let imagesUrl = await Promise.all(
                 images.map(async (item) => {
                     try {
-                        let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+                        let result = await cloudinary.uploader.upload(item.path, { 
+                            resource_type: 'image',
+                            quality: 'auto',
+                            fetch_format: 'auto'
+                        });
                         return result.secure_url;
                     } catch (error) {
                         return `${req.protocol}://${req.get('host')}/uploads/${item.filename}`;

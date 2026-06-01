@@ -10,6 +10,20 @@ const productSchema = new mongoose.Schema({
     subCategory:{ type: String, required: true},
     sizes:{ type: Array, required: true },
     bestseller:{ type: Boolean, default: false },
+    reviews: {
+        type: [
+            {
+                userId: { type: String, required: true },
+                name: { type: String, required: true },
+                rating: { type: Number, required: true },
+                comment: { type: String, default: "" },
+                createdAt: { type: Date, default: Date.now }
+            }
+        ],
+        default: []
+    },
+    averageRating: { type: Number, default: 0 },
+    reviewCount: { type: Number, default: 0 },
     date:{ type: Date, required: true }
 })
 

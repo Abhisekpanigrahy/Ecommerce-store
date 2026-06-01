@@ -6,7 +6,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     image: { type: String, default: "" },
     addressData: { type: Array, default: [] },
-    cartData: { type: Object, default: {} }
+    cartData: { type: Object, default: {} },
+    wishlist: { type: [String], default: [] }
 },{minimize: false});
 
 

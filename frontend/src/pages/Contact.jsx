@@ -15,7 +15,7 @@ const Contact = () => {
 
         <div className='flex flex-col justify-center items-start gap-6'> 
           <p className='font-semibold text-xl'>Our Store</p>
-          <p className='text-gray-500'>Sector 10, Uttara Model Town <br />Dhaka-1230</p>
+          <p className='text-gray-500'>Sector 10, Uttara Model Town <br />Bhubaneswar, Odisha, India</p>
           <p className='text-gray-500'>
             Tel: <a className='hover:text-black' href='tel:+919348657780'>+919348657780</a>
             <br />

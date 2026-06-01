@@ -7,7 +7,7 @@ import axios from "axios";
 
 const Orders = () => {
 
-  const {backendUrl, token, currency}= useContext(ShopContext);
+  const {backendUrl, token, currency, navigate}= useContext(ShopContext);
  
 
   const [orderData, setorderData] = useState([]);
@@ -23,6 +23,7 @@ const Orders = () => {
         let allOrdersItem = [];
         response.data.orders.map((order)=>{
           order.items.map((item)=>{
+            item['orderId'] = order._id || order.id;
             item['status']= order.status;
             item['payment'] = order.payment;
             item['paymentMethod']= order.paymentMethod;
@@ -54,7 +55,12 @@ const Orders = () => {
       </div>
      
      <div>
-      {
+      {orderData.length === 0 ? (
+        <div className="py-20 text-center text-gray-500">
+          <p className="text-xl font-semibold text-gray-700">No orders yet.</p>
+          <p className="mt-2">Your order history is empty. Make a purchase to see orders here.</p>
+        </div>
+      ) : (
         orderData.map((item,index) =>(
           <div key={index} className="py-4 border-b text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-start gap-6 text-sm">
@@ -78,11 +84,11 @@ const Orders = () => {
                   <p className="min-w-2 h-2 rounded-full bg-green-500"></p>
                   <p className="text-sm md:text-base">{item.status}</p>
               </div>
-              <button onClick={loadOrderData} className="border px-4 py-2 text-sm font-medium rounded-sm">Track Order</button>
+              <button onClick={() => navigate(`/track-order/${item.orderId}`)} className="border px-4 py-2 text-sm font-medium rounded-sm">Track Order</button>
             </div>
           </div>
         ))
-      }
+      )}
      </div>
 
     </div>

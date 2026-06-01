@@ -25,7 +25,15 @@ const Hero = () => {
 
 
       {/* Hero right side */}
-      <img src={assets.hero_img} alt="Hero_img" className="w-full sm:w-1/2 object-cover" fetchpriority="high" loading="eager" />
+      <Link to="/collection" className="w-full sm:w-1/2 block">
+        <img
+          src={assets.hero_img}
+          alt="Hero_img"
+          className="w-full h-full object-cover cursor-pointer"
+          fetchpriority="high"
+          loading="eager"
+        />
+      </Link>
     </div>
   );
 };

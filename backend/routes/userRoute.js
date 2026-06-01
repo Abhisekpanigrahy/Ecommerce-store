@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginUser, registerUser, adminLogin, getUserProfile, addAddress, updateAddress, deleteAddress, updateProfilePic, updateProfileInfo } from '../controllers/userController.js';
+import { loginUser, registerUser, adminLogin, getUserProfile, addAddress, updateAddress, deleteAddress, updateProfilePic, updateProfileInfo, toggleWishlist } from '../controllers/userController.js';
 import authUser from '../middleware/auth.js';
 
 
@@ -14,5 +14,6 @@ userRouter.post('/address/update', authUser, updateAddress); // Route for updati
 userRouter.post('/address/delete', authUser, deleteAddress); // Route for deleting address
 userRouter.post('/profile/update-pic', authUser, updateProfilePic); // Route for updating profile pic
 userRouter.post('/profile/update', authUser, updateProfileInfo); // Route for updating profile info
+userRouter.post('/wishlist/toggle', authUser, toggleWishlist); // Route for wishlist toggle
 
 export default userRouter;

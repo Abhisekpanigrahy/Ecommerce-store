@@ -55,7 +55,7 @@ function Navbar() {
   }, []);
 
   return (
-    <div className="flex items-center justify-between py-5 font-medium">
+    <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 flex items-center justify-between py-5 font-medium">
       <Link to={"/"} className="flex items-center gap-1">
         <p className="text-2xl font-bold tracking-tighter text-gray-800 uppercase">ELITE WEAR<span className="text-pink-500">.</span></p>
       </Link>

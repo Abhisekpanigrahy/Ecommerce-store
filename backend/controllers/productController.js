@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
 import productModel from '../models/productModel.js';
+import userModel from '../models/userModel.js';
 
 
 
@@ -84,6 +85,62 @@ const listProducts = async (req, res) => {
 
 
 
+// function for submit product review
+const addReview = async (req, res) => {
+    try {
+        const { productId, rating, comment } = req.body;
+        const reviewerId = req.userId || req.body.userId;
+
+        if (!productId || !rating) {
+            return res.json({ success: false, message: "Product ID and rating are required." });
+        }
+
+        const product = await productModel.findById(productId);
+        if (!product) {
+            return res.json({ success: false, message: "Product not found." });
+        }
+
+        const user = await userModel.findById(reviewerId);
+        if (!user) {
+            return res.json({ success: false, message: "User not found." });
+        }
+
+        const numericRating = Number(rating);
+        if (Number.isNaN(numericRating) || numericRating < 1 || numericRating > 5) {
+            return res.json({ success: false, message: "Rating must be a number between 1 and 5." });
+        }
+
+        const existingReviewIndex = product.reviews.findIndex(
+            (review) => review.userId === reviewerId
+        );
+
+        const reviewPayload = {
+            userId: reviewerId,
+            name: user.name || "Anonymous",
+            rating: numericRating,
+            comment: comment?.trim() || "",
+            createdAt: new Date()
+        };
+
+        if (existingReviewIndex >= 0) {
+            product.reviews[existingReviewIndex] = reviewPayload;
+        } else {
+            product.reviews.push(reviewPayload);
+        }
+
+        product.reviewCount = product.reviews.length;
+        product.averageRating =
+            product.reviews.reduce((sum, item) => sum + item.rating, 0) / product.reviewCount;
+
+        await product.save();
+
+        res.json({ success: true, message: "Review submitted successfully.", product });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
 // function for removing product 
 const removeProduct = async (req, res) => {
 
@@ -166,4 +223,4 @@ const updateProduct = async (req, res) => {
     }
 }
 
-export { listProducts, addProduct, removeProduct, singleProduct, updateProduct };
+export { listProducts, addProduct, addReview, removeProduct, singleProduct, updateProduct };

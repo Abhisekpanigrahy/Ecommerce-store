@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Home from "./pages/Home";
 import Collection from "./pages/Collection";
 import About from "./pages/About";
@@ -8,6 +9,7 @@ import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import PlaceOrder from "./pages/PlaceOrder";
 import Orders from "./pages/Orders";
+import TrackOrder from "./pages/TrackOrder";
 import Delivery from "./pages/Delivery";
 import Profile from "./pages/Profile";
 import Navbar from './components/Navbar';
@@ -19,10 +21,18 @@ import Verify from "./pages/Verify";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
 
 const App = () => {
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+      <ScrollToTop />
       <ToastContainer/>
       <Navbar/>
       <SearchBar/>
@@ -36,6 +46,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/track-order/:orderId" element={<TrackOrder />} />
         <Route path="/delivery" element={<Delivery />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/verify" element={<Verify />} />

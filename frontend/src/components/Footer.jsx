@@ -7,9 +7,13 @@ const Footer = () => {
     <div>
       <div className="flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-10 text-sm">
         <div>
-          <p className="w-full md:w-2/3 text-gray-800 font-bold text-2xl tracking-tighter uppercase">
+          <Link
+            to="/"
+            onClick={() => window.scrollTo(0, 0)}
+            className="w-full md:w-2/3 text-gray-800 font-bold text-2xl tracking-tighter uppercase inline-block"
+          >
             ELITE WEAR<span className="text-pink-500">.</span>
-          </p>
+          </Link>
           <p className="w-full md:w-2/3 text-gray-600 mt-2">
             ELITE WEAR brings together everyday essentials and standout styles so
             you can shop confidently for every occasion.
@@ -20,23 +24,39 @@ const Footer = () => {
           <p className="text-xl font-medium mb-5">COMPANY</p>
           <ul className="flex flex-col gap-1 text-gray-600">
             <li>
-              <Link className="hover:text-black" to="/">
+              <Link
+                className="hover:text-black"
+                to="/"
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 Home
               </Link>
             </li>
             <li>
-              <Link className="hover:text-black" to="/about">
+              <Link
+                className="hover:text-black"
+                to="/about"
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 About us
               </Link>
             </li>
             <li>
-              <Link className="hover:text-black" to="/delivery">
+              <Link
+                className="hover:text-black"
+                to="/delivery"
+                onClick={() => window.scrollTo(0, 0)}
+              >
                 Delivery
               </Link>
             </li>
             <li>
-              <Link className="hover:text-black" to="/contact">
-                Privacy policy
+              <Link
+                className="hover:text-black"
+                to="/contact"
+                onClick={() => window.scrollTo(0, 0)}
+              >
+                Contact us
               </Link>
             </li>
           </ul>

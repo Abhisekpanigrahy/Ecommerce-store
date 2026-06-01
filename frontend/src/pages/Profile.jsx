@@ -8,6 +8,8 @@ import { assets } from "../assets/assets";
 const Profile = () => {
   const { backendUrl, token, setToken, navigate, getUserData, userData, setUserData, setCartItems } = useContext(ShopContext);
   const [profile, setProfile] = useState(userData);
+  const [previewImage, setPreviewImage] = useState(userData?.image || "");
+  const [selectedImage, setSelectedImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({ name: userData?.name || "" });
 
@@ -41,55 +43,88 @@ const Profile = () => {
   useEffect(() => {
     if (userData) {
       setProfile(userData);
+      setPreviewImage(userData.image || "");
       setEditData({ name: userData.name });
     }
     loadProfile();
   }, [backendUrl, token, navigate]);
 
+  useEffect(() => {
+    return () => {
+      if (previewImage && previewImage.startsWith("blob:")) {
+        URL.revokeObjectURL(previewImage);
+      }
+    };
+  }, [previewImage]);
+
+  const uploadProfileImage = async (file) => {
+    const reader = new FileReader();
+    const imageData = await new Promise((resolve, reject) => {
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("Failed to read image file"));
+      reader.readAsDataURL(file);
+    });
+
+    const response = await axios.post(
+      backendUrl + "/api/user/profile/update-pic",
+      { image: imageData },
+      { headers: { token } }
+    );
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Failed to update profile picture");
+    }
+    return imageData;
+  };
+
   const handleProfileUpdate = async () => {
     try {
+      let imageData = null;
+      if (selectedImage) {
+        imageData = await uploadProfileImage(selectedImage);
+      }
+
       const response = await axios.post(
         backendUrl + "/api/user/profile/update",
         { name: editData.name },
         { headers: { token } }
       );
+
       if (response.data.success) {
         toast.success(response.data.message);
         setIsEditing(false);
+        if (imageData) {
+          setPreviewImage(imageData);
+          setProfile((prev) => ({ ...(prev || {}), image: imageData }));
+          setUserData((prev) => ({ ...(prev || {}), image: imageData }));
+          localStorage.setItem(
+            "userData",
+            JSON.stringify({ ...(userData || {}), image: imageData })
+          );
+          setSelectedImage(null);
+        }
         loadProfile();
         getUserData(token);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      toast.error("Failed to update profile");
+      toast.error(error.message || "Failed to update profile");
     }
   };
 
-  const handleImageChange = async (e) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // In a real app, upload to Cloudinary and get URL
-    // For now, we'll use base64 for simplicity in this demo
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      try {
-        const response = await axios.post(
-          backendUrl + "/api/user/profile/update-pic",
-          { image: reader.result },
-          { headers: { token } }
-        );
-        if (response.data.success) {
-          toast.success("Profile picture updated");
-          loadProfile();
-          getUserData(token);
-        }
-      } catch (error) {
-        toast.error("Failed to update profile picture");
-      }
-    };
-    reader.readAsDataURL(file);
+    if (previewImage && previewImage.startsWith("blob:")) {
+      URL.revokeObjectURL(previewImage);
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewImage(objectUrl);
+    setSelectedImage(file);
+    toast.info("Image selected. Click Save to update your profile picture.");
   };
 
   return (
@@ -101,7 +136,7 @@ const Profile = () => {
       <div className="max-w-2xl mx-auto my-10 border border-gray-200 p-6 sm:p-8 flex flex-col items-center">
         <div className="relative group">
           <img
-            src={profile?.image || assets.profile_icon}
+            src={previewImage || profile?.image || assets.profile_icon}
             className="w-32 h-32 rounded-full object-cover border-2 border-gray-100"
             alt="Profile"
           />

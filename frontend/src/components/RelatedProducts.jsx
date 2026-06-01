@@ -33,7 +33,16 @@ import PropTypes from 'prop-types';
        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-5"> 
         
          {related.map((item,index) => (
-        <ProducItem key={index} id={item._id} name={item.name} price={item.price} image={item.image}/>
+        <ProducItem
+          key={index}
+          id={item._id}
+          name={item.name}
+          price={item.price}
+          image={item.image}
+          sizes={item.sizes}
+          averageRating={item.averageRating}
+          reviewCount={item.reviewCount}
+        />
          ))}
 
        </div>

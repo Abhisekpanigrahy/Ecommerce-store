@@ -194,6 +194,41 @@ const updateProfilePic = async (req, res) => {
     }
 }
 
+// Toggle wishlist item
+const toggleWishlist = async (req, res) => {
+    try {
+        const { productId } = req.body;
+        const userId = req.userId || req.body.userId;
+
+        if (!productId) {
+            return res.json({ success: false, message: 'Product ID is required.' });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.json({ success: false, message: 'User not found.' });
+        }
+
+        const isWishlisted = user.wishlist.includes(productId);
+        let wishlist = [...user.wishlist];
+
+        if (isWishlisted) {
+            wishlist = wishlist.filter((id) => id !== productId);
+        } else {
+            wishlist.push(productId);
+        }
+
+        user.wishlist = wishlist;
+        await user.save();
+
+        const updatedUser = await userModel.findById(userId).select('-password');
+        res.json({ success: true, message: isWishlisted ? 'Removed from wishlist.' : 'Added to wishlist.', user: updatedUser });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
 // Update Profile Info
 const updateProfileInfo = async (req, res) => {
     try {
@@ -206,4 +241,4 @@ const updateProfileInfo = async (req, res) => {
     }
 }
 
-export { loginUser, registerUser, adminLogin, getUserProfile, addAddress, updateAddress, deleteAddress, updateProfilePic, updateProfileInfo };
+export { loginUser, registerUser, adminLogin, getUserProfile, addAddress, updateAddress, deleteAddress, updateProfilePic, updateProfileInfo, toggleWishlist };

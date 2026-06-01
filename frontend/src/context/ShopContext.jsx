@@ -211,6 +211,32 @@ const ShopContextProvider = (props) => {
     }
   };
 
+  const toggleWishlist = async (productId) => {
+    if (!token) {
+      toast.info("Please login to add to wishlist.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        backendUrl + "/api/user/wishlist/toggle",
+        { productId },
+        { headers: { token } }
+      );
+
+      if (response.data.success) {
+        setUserData(response.data.user);
+        localStorage.setItem("userData", JSON.stringify(response.data.user));
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message || "Could not update wishlist.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message || "Could not update wishlist.");
+    }
+  };
+
   useEffect(() => {
     getProductsData();
   }, []);
@@ -226,6 +252,7 @@ const ShopContextProvider = (props) => {
 
   const value = {
     products,
+    setProducts,
     currency,
     delivery_fee,
     search,
@@ -245,6 +272,7 @@ const ShopContextProvider = (props) => {
     userData,
     setUserData,
     getUserData,
+    toggleWishlist,
   };
 
   ShopContextProvider.propTypes = {

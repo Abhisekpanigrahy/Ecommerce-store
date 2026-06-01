@@ -22,8 +22,24 @@ const ShopContextProvider = (props) => {
 
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState("");
+  const [userData, setUserData] = useState(null);
 
   const navigate = useNavigate();
+
+  const getUserData = async (token) => {
+    try {
+      const response = await axios.post(
+        backendUrl + "/api/user/profile",
+        {},
+        { headers: { token } }
+      );
+      if (response.data.success) {
+        setUserData(response.data.user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const addToCart = async (itemId, size) => {
     if (!size) {
@@ -173,8 +189,10 @@ const ShopContextProvider = (props) => {
 
   useEffect(() => {
     if (!token && localStorage.getItem("token")) {
-      setToken(localStorage.getItem("token"));
-      getUserCart(localStorage.getItem("token"));
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+      getUserCart(storedToken);
+      getUserData(storedToken);
     }
   }, []);
 
@@ -196,6 +214,9 @@ const ShopContextProvider = (props) => {
     backendUrl,
     setToken,
     token,
+    userData,
+    setUserData,
+    getUserData,
   };
 
   ShopContextProvider.propTypes = {

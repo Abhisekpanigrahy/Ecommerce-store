@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginUser, registerUser, adminLogin, getUserProfile, addAddress, updateAddress, deleteAddress, updateProfilePic } from '../controllers/userController.js';
+import { loginUser, registerUser, adminLogin, getUserProfile, addAddress, updateAddress, deleteAddress, updateProfilePic, updateProfileInfo } from '../controllers/userController.js';
 import authUser from '../middleware/auth.js';
 
 
@@ -13,5 +13,6 @@ userRouter.post('/address/add', authUser, addAddress); // Route for adding addre
 userRouter.post('/address/update', authUser, updateAddress); // Route for updating address
 userRouter.post('/address/delete', authUser, deleteAddress); // Route for deleting address
 userRouter.post('/profile/update-pic', authUser, updateProfilePic); // Route for updating profile pic
+userRouter.post('/profile/update', authUser, updateProfileInfo); // Route for updating profile info
 
 export default userRouter;

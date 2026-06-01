@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { backendUrl, currency } from "../App";
 import { toast } from "react-toastify";
+import EditProduct from "../components/EditProduct";
 
 const List = ({token}) => {
   const [list, setList] = useState([]);
+  const [showEdit, setShowEdit] = useState(false);
+  const [editProductData, setEditProductData] = useState(null);
 
   const fetchList = async () => {
     try {
@@ -42,7 +45,10 @@ const List = ({token}) => {
     }
   };
 
-
+  const handleEdit = (product) => {
+    setEditProductData(product);
+    setShowEdit(true);
+  };
 
 
   // Fetch the product list when the component mounts
@@ -53,6 +59,18 @@ const List = ({token}) => {
   return (
     <>
       <p className="mb-2">All Products List</p>
+
+      {showEdit && (
+        <EditProduct 
+          token={token} 
+          product={editProductData} 
+          onUpdate={() => {
+            setShowEdit(false);
+            fetchList();
+          }} 
+          onCancel={() => setShowEdit(false)} 
+        />
+      )}
 
       <div className="flex flex-col gap-2">
         {/* ------ List Table Title--------- */}
@@ -79,9 +97,22 @@ const List = ({token}) => {
               {currency}
               {item.price}
             </p>
-            <p onClick={() => removeProduct(item._id)} className="text-right md:text-center cursor-pointer text-lg">
-              X
-            </p>
+            <div className="flex md:justify-center gap-4 text-right md:text-center cursor-pointer text-lg">
+              <p 
+                onClick={() => handleEdit(item)} 
+                className="hover:text-blue-600"
+                title="Edit Product"
+              >
+                ✎
+              </p>
+              <p 
+                onClick={() => removeProduct(item._id)} 
+                className="hover:text-red-600"
+                title="Remove Product"
+              >
+                X
+              </p>
+            </div>
           </div>
         ))}
       </div>

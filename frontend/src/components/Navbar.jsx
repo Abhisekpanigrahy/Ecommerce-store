@@ -16,6 +16,8 @@ function Navbar() {
     token,
     setToken,
     setCartItems,
+    userData,
+    setUserData,
   } = useContext(ShopContext);
 
   const logout = () => {
@@ -23,6 +25,7 @@ function Navbar() {
     localStorage.removeItem("token");
     setToken("");
     setCartItems({});
+    setUserData(null);
     setProfileOpen(false);
   };
 
@@ -52,8 +55,8 @@ function Navbar() {
 
   return (
     <div className="flex items-center justify-between py-5 font-medium">
-      <Link to={"/"}>
-        <img src={assets.logo} className="w-36" alt="logoImage" />
+      <Link to={"/"} className="flex items-center gap-1">
+        <p className="text-2xl font-bold tracking-tighter text-gray-800 uppercase">ELITE WEAR<span className="text-pink-500">.</span></p>
       </Link>
 
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
@@ -91,16 +94,16 @@ function Navbar() {
         <img
           onClick={openSearch}
           src={assets.search_icon}
-          className="w-5 cursor-pointer"
+          className="w-5 h-5 cursor-pointer object-contain"
           alt="searchIcon"
         />
 
-        <div ref={profileRef} className="relative">
+        <div ref={profileRef} className="relative group">
           <img
             onClick={handleProfileClick}
-            src={assets.profile_icon}
-            className="w-5 cursor-pointer"
-            alt="pofileIcon"
+            src={(token && userData?.image) ? userData.image : assets.profile_icon}
+            className={`w-5 h-5 cursor-pointer ${(token && userData?.image) ? 'rounded-full object-cover' : 'object-contain'}`}
+            alt="profileIcon"
           />
 
           {/* dropdown menu for profile icon */}

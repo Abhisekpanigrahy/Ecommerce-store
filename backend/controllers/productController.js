@@ -111,5 +111,50 @@ const singleProduct = async (req, res) => {
 }
 
 
+// function for update product
+const updateProduct = async (req, res) => {
+    try {
+        const { id, name, description, price, category, subCategory, sizes, bestseller } = req.body;
 
-export { listProducts, addProduct, removeProduct, singleProduct };
+        const image1 = req.files && req.files.image1 && req.files.image1[0];
+        const image2 = req.files && req.files.image2 && req.files.image2[0];
+        const image3 = req.files && req.files.image3 && req.files.image3[0];
+        const image4 = req.files && req.files.image4 && req.files.image4[0];
+
+        const images = [image1, image2, image3, image4].filter((item) => item !== undefined);
+
+        let updateData = {
+            name,
+            description,
+            category,
+            price: Number(price),
+            subCategory,
+            bestseller: bestseller === "true" ? true : false,
+            sizes: JSON.parse(sizes)
+        };
+
+        if (images.length > 0) {
+            let imagesUrl = await Promise.all(
+                images.map(async (item) => {
+                    try {
+                        let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+                        return result.secure_url;
+                    } catch (error) {
+                        return `${req.protocol}://${req.get('host')}/uploads/${item.filename}`;
+                    }
+                })
+            );
+            updateData.image = imagesUrl;
+        }
+
+        await productModel.findByIdAndUpdate(id, updateData);
+
+        res.json({ success: true, message: "Product updated successfully" });
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { listProducts, addProduct, removeProduct, singleProduct, updateProduct };

@@ -5,7 +5,10 @@ import { FiLogOut } from "react-icons/fi"; // logout icon
 const Navbar = ({ setToken }) => {
   return (
     <div className="flex items-center py-2 px-[4%] justify-between">
-      <img className="w-[max(10%,80px)]" src={assets.logo} alt="admin_logo" />
+      <div className="flex flex-col">
+        <p className="text-xl font-bold tracking-tighter text-gray-800 uppercase">ELITE WEAR<span className="text-pink-500">.</span></p>
+        <p className="text-[10px] text-pink-500 font-medium tracking-widest -mt-1 uppercase text-center">Admin Panel</p>
+      </div>
 
       <button
         onClick={() => setToken("")}

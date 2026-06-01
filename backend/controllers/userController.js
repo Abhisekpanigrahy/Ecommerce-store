@@ -182,7 +182,7 @@ const deleteAddress = async (req, res) => {
     }
 }
 
-// Update Profile Picture
+// Update Profile Pic
 const updateProfilePic = async (req, res) => {
     try {
         const { userId, image } = req.body;
@@ -194,4 +194,16 @@ const updateProfilePic = async (req, res) => {
     }
 }
 
-export { loginUser, registerUser, adminLogin, getUserProfile, addAddress, updateAddress, deleteAddress, updateProfilePic };
+// Update Profile Info
+const updateProfileInfo = async (req, res) => {
+    try {
+        const { userId, name } = req.body;
+        await userModel.findByIdAndUpdate(userId, { name });
+        res.json({ success: true, message: "Profile updated successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { loginUser, registerUser, adminLogin, getUserProfile, addAddress, updateAddress, deleteAddress, updateProfilePic, updateProfileInfo };

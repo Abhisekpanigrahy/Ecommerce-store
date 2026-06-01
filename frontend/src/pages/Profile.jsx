@@ -6,7 +6,7 @@ import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 
 const Profile = () => {
-  const { backendUrl, token, navigate } = useContext(ShopContext);
+  const { backendUrl, token, setToken, navigate, getUserData, setUserData, setCartItems } = useContext(ShopContext);
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({ name: "" });
@@ -41,10 +41,23 @@ const Profile = () => {
   }, [backendUrl, token, navigate]);
 
   const handleProfileUpdate = async () => {
-    // Note: Profile update endpoint would need to be added to backend
-    // For now, focusing on the UI as requested
-    toast.info("Profile update functionality can be added here");
-    setIsEditing(false);
+    try {
+      const response = await axios.post(
+        backendUrl + "/api/user/profile/update",
+        { name: editData.name },
+        { headers: { token } }
+      );
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setIsEditing(false);
+        loadProfile();
+        getUserData(token);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to update profile");
+    }
   };
 
   const handleImageChange = async (e) => {
@@ -52,7 +65,7 @@ const Profile = () => {
     if (!file) return;
 
     // In a real app, upload to Cloudinary and get URL
-    // For now, we'll simulate or use a base64
+    // For now, we'll use base64 for simplicity in this demo
     const reader = new FileReader();
     reader.onloadend = async () => {
       try {
@@ -64,6 +77,7 @@ const Profile = () => {
         if (response.data.success) {
           toast.success("Profile picture updated");
           loadProfile();
+          getUserData(token);
         }
       } catch (error) {
         toast.error("Failed to update profile picture");
@@ -105,7 +119,6 @@ const Profile = () => {
                   onChange={(e) => setEditData({ ...editData, name: e.target.value })}
                   className="border px-2 py-1 flex-1 outline-none"
                 />
-                <button onClick={handleProfileUpdate} className="text-sm bg-black text-white px-3 py-1">Save</button>
                 <button onClick={() => setIsEditing(false)} className="text-sm border px-3 py-1">Cancel</button>
               </div>
             ) : (
@@ -124,14 +137,17 @@ const Profile = () => {
 
         <div className="flex gap-4 mt-10">
           <button
-            onClick={() => navigate("/orders")}
-            className="bg-black text-white px-8 py-3 text-sm uppercase tracking-widest"
+            onClick={handleProfileUpdate}
+            className="bg-black text-white px-12 py-3 text-sm uppercase tracking-widest hover:bg-gray-800 transition-all"
           >
-            My Orders
+            Save
           </button>
           <button
             onClick={() => {
               localStorage.removeItem('token');
+              setToken("");
+              setUserData(null);
+              setCartItems({});
               navigate('/login');
             }}
             className="border border-black px-8 py-3 text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-all"

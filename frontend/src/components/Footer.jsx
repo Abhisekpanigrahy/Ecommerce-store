@@ -7,9 +7,11 @@ const Footer = () => {
     <div>
       <div className="flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-10 text-sm">
         <div>
-          <img src={assets.logo} alt="logo" className="mb-5 w-32" />
-          <p className="w-full md:w-2/3 text-gray-600">
-            Forever brings together everyday essentials and standout styles so
+          <p className="w-full md:w-2/3 text-gray-800 font-bold text-2xl tracking-tighter uppercase">
+            ELITE WEAR<span className="text-pink-500">.</span>
+          </p>
+          <p className="w-full md:w-2/3 text-gray-600 mt-2">
+            ELITE WEAR brings together everyday essentials and standout styles so
             you can shop confidently for every occasion.
           </p>
         </div>
@@ -65,7 +67,7 @@ const Footer = () => {
       <div>
         <hr />
         <p className="py-5 text-sm text-center text-gray-500">
-          &copy; {new Date().getFullYear()} Forever. All rights reserved.
+          &copy; {new Date().getFullYear()} ELITE WEAR. All rights reserved.
         </p>
       </div>
     </div>

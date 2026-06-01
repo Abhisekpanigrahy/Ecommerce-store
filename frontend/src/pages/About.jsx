@@ -15,36 +15,36 @@ const About = () => {
         <img className='w-full md:max-w-[450px]' src={assets.about_img} alt="about_img" />
         
         <div className='flex flex-col justify-center gap-6 md:w-2/4 text-gray-600'>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam nobis unde harum nemo velit nesciunt libero, optio corrupti voluptatibus dolore sequi ipsum excepturi ullam veritatis laboriosam iusto maxime impedit tenetur.</p>
+          <p>Forever was born out of a passion for style and a desire to provide high-quality fashion to everyone. We believe that what you wear is an extension of your personality, and we are here to help you express yourself through our carefully selected pieces.</p>
 
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam nobis unde harum nemo velit nesciunt libero, optio corrupti voluptatibus dolore sequi ipsum excepturi ullam veritatis laboriosam iusto maxime impedit tenetur.</p>
+          <p>Our journey started with a simple idea: to make premium shopping accessible and enjoyable. Today, we continue to innovate and grow, always keeping our customers at the heart of everything we do.</p>
 
 
           <b className='text-gray-800'>Our Mission</b>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem aspernatur recusandae magnam fugit sint quasi totam nobis quidem blanditiis suscipit.</p>
+          <p>Our mission is to empower individuals through fashion by providing versatile, high-quality clothing that combines comfort with contemporary style.</p>
         </div>
 
       </div>
       
       <div className='text-xl py-4'>
-        <Title text1={'WHY'} text2={'CHOSE US'}/>
+        <Title text1={'WHY'} text2={'CHOOSE US'}/>
       </div>
 
       <div className='flex flex-col md:flex-row text-sm mb-20'>  
 
           <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
-              <b>Quality Asssurance:</b>
-              <p className='text-gray-600'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laboriosam, corporis.</p>
+              <b>Quality Assurance:</b>
+              <p className='text-gray-600'>We meticulously source our materials and partner with reliable manufacturers to ensure every product meets our high standards.</p>
           </div>
 
           <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
               <b>Convenience:</b>
-              <p className='text-gray-600'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laboriosam, corporis.</p>
+              <p className='text-gray-600'>With our user-friendly interface and hassle-free ordering process, shopping for your favorite styles has never been easier.</p>
           </div>
 
           <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
               <b>Exceptional Customer Service:</b>
-              <p className='text-gray-600'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laboriosam, corporis.</p>
+              <p className='text-gray-600'>Our dedicated support team is available 24/7 to assist you with any inquiries or concerns, ensuring a smooth shopping experience.</p>
           </div>
 
       </div>

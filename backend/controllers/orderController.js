@@ -299,5 +299,17 @@ const updateStatus = async (req, res) => {
 }
 
 
-export { verifyStripe, verifyRazorpay, placeOrder, placeOrderStripe, placeOrderRazorpay, allOrders, userOrders, updateStatus, formatDateTime };
+// delete order from admin panel
+const deleteOrder = async (req, res) => {
+    try {
+        const { orderId } = req.body;
+        await orderModel.findByIdAndDelete(orderId);
+        res.json({ success: true, message: "Order Deleted Successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { verifyStripe, verifyRazorpay, placeOrder, placeOrderStripe, placeOrderRazorpay, allOrders, userOrders, updateStatus, formatDateTime, deleteOrder };
 

@@ -136,8 +136,8 @@ const Product = () => {
               {productData.sizes.map((item, index) => (
                 <button
                   onClick={() => setSize(item)}
-                  className={`border py-2 px-4 bg-gray-100 ${
-                    item === size ? "border-orange-500" : ""
+                  className={`border py-2 px-4 bg-gray-100 transition-all duration-150 hover:border-black active:scale-95 ${
+                    item === size ? "border-black bg-gray-200 font-semibold" : ""
                   }`}
                   key={index}
                 >
@@ -149,7 +149,7 @@ const Product = () => {
 
           <button
                 onClick={() => addToCart(productData._id, size)}
-                className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
+                className="bg-black text-white px-8 py-3 text-sm transition-all duration-150 hover:bg-gray-800 hover:shadow-lg active:scale-95 active:shadow-none"
               >
                 ADD TO CART
               </button>
@@ -245,7 +245,7 @@ const Product = () => {
                 <button
                   type="submit"
                   disabled={submittingReview}
-                  className="bg-black text-white px-6 py-3 text-sm uppercase tracking-widest hover:bg-gray-800 disabled:opacity-50"
+                  className="bg-black text-white px-6 py-3 text-sm uppercase tracking-widest transition-all duration-150 hover:bg-gray-800 hover:shadow-lg active:scale-95 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submittingReview ? "Submitting..." : "Submit review"}
                 </button>

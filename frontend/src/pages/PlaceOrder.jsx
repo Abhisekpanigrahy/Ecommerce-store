@@ -427,7 +427,7 @@ const PlaceOrder = () => {
             placeholder="Phone"
           />
           
-          <button type="submit" className="bg-black text-white py-2 rounded text-sm uppercase tracking-widest hover:bg-gray-800 transition-all">
+          <button type="submit" className="bg-black text-white py-2 rounded text-sm uppercase tracking-widest transition-all duration-150 hover:bg-gray-800 hover:shadow-md active:scale-95 active:shadow-none">
             {isEditingAddress ? 'Update & Save' : 'Save Address'}
           </button>
         </form>
@@ -486,7 +486,7 @@ const PlaceOrder = () => {
             <button
               type="submit"
               disabled={!selectedAddressId}
-              className={`bg-black text-white px-16 py-3 text-sm uppercase tracking-widest hover:bg-gray-800 transition-all ${!selectedAddressId ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`bg-black text-white px-16 py-3 text-sm uppercase tracking-widest transition-all duration-150 hover:bg-gray-800 hover:shadow-lg active:scale-95 active:shadow-none ${!selectedAddressId ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               Place Order
             </button>

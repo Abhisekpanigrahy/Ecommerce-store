@@ -94,7 +94,7 @@ if(token){
 
       </div>
 
-<button className='bg-black text-white font-light px-8 py-2 mt-4'>{currentState === 'Login' ? 'Sign In' : 'Sign Up'}</button>
+<button className='bg-black text-white font-light px-8 py-2 mt-4 transition-all duration-150 hover:bg-gray-800 hover:shadow-lg active:scale-95 active:shadow-none'>{currentState === 'Login' ? 'Sign In' : 'Sign Up'}</button>
 
       </form>
     </div>

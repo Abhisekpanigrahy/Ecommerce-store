@@ -12,8 +12,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 
-export const backendUrl = import.meta.env.VITE_BACKEND_URL;
-export const currency = '৳';
+export const backendUrl = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5000").replace(/\/+$/, "");
+export const currency = "$";
 
 
 

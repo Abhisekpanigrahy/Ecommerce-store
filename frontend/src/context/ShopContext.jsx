@@ -3,15 +3,15 @@ import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { products as localProducts } from "../assets/assets";
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
-  const currency = "৳ ";
+  const currency = "$";
   const delivery_fee = 10;
 
-  // backendUrl is imported from the admin app
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5000").replace(/\/+$/, "");
 
   // for searching state
   const [search, setSearch] = useState("");
@@ -125,7 +125,22 @@ const ShopContextProvider = (props) => {
       const response = await axios.get(backendUrl + "/api/product/list");
 
       if (response.data.success) {
-        setProducts(response.data.products);
+        const productsWithImages = response.data.products.map((product, index) => {
+          const hasRemoteImage =
+            Array.isArray(product.image) &&
+            product.image.length > 0 &&
+            product.image[0] &&
+            !product.image[0].includes("via.placeholder.com");
+
+          return hasRemoteImage
+            ? product
+            : {
+                ...product,
+                image: localProducts[index % localProducts.length].image,
+              };
+        });
+
+        setProducts(productsWithImages);
       } else {
         toast.error(response.data.message);
       }

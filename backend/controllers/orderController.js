@@ -7,7 +7,7 @@ import Razorpay from 'razorpay';
 
 
 // global variables
-const currency = "bdt"; // currency for the application
+const currency = "usd"; // currency for the application
 const deliveryCharges = 10;
 
 
@@ -300,5 +300,4 @@ const updateStatus = async (req, res) => {
 
 
 export { verifyStripe, verifyRazorpay, placeOrder, placeOrderStripe, placeOrderRazorpay, allOrders, userOrders, updateStatus, formatDateTime };
-
 

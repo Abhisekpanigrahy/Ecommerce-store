@@ -1,10 +1,13 @@
 import { assets } from "./../assets/assets";
 import { Link, NavLink } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 
 function Navbar() {
   const [visible, setVisible] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
+  const adminUrl = import.meta.env.VITE_ADMIN_URL || "http://localhost:5177";
 
   const {
     setShowSearch,
@@ -19,9 +22,33 @@ function Navbar() {
     navigate("/login");
     localStorage.removeItem("token");
     setToken("");
-    // toast.success("Logout successful");
     setCartItems({});
+    setProfileOpen(false);
   };
+
+  const openSearch = () => {
+    navigate("/collection");
+    setShowSearch(true);
+  };
+
+  const handleProfileClick = () => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    setProfileOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
 
   return (
     <div className="flex items-center justify-between py-5 font-medium">
@@ -47,41 +74,53 @@ function Navbar() {
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
 
-        <NavLink
+        <a
           target="_blank"
-          to="https://forever-admin-omega-liard.vercel.app/"
+          rel="noreferrer"
+          href={adminUrl}
           className="flex flex-col items-center gap-1 "
         >
           <span className="border px-5 text-sm py-1 rounded-full -mt-1">
             Admin Panel
           </span>
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </NavLink>
+        </a>
       </ul>
 
       <div className="flex items-center gap-6">
         <img
-          onClick={() => setShowSearch(true)}
+          onClick={openSearch}
           src={assets.search_icon}
           className="w-5 cursor-pointer"
           alt="searchIcon"
         />
 
-        <div className="group relative">
+        <div ref={profileRef} className="relative">
           <img
-            onClick={() => (token ? null : navigate("/login"))}
+            onClick={handleProfileClick}
             src={assets.profile_icon}
             className="w-5 cursor-pointer"
             alt="pofileIcon"
           />
 
           {/* dropdown menu for profile icon */}
-          {token && (
-            <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-              <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-                <p className="cursor-pointer hover:text-black">My Profile</p>
+          {token && profileOpen && (
+            <div className="absolute dropdown-menu right-0 pt-4 z-50">
+              <div className="flex flex-col gap-2 w-40 py-3 px-5 bg-slate-100 text-gray-600 rounded shadow-sm">
                 <p
-                  onClick={() => navigate("/orders")}
+                  onClick={() => {
+                    navigate("/profile");
+                    setProfileOpen(false);
+                  }}
+                  className="cursor-pointer hover:text-black"
+                >
+                  My Profile
+                </p>
+                <p
+                  onClick={() => {
+                    navigate("/orders");
+                    setProfileOpen(false);
+                  }}
                   className="cursor-pointer hover:text-black"
                 >
                   Orders
@@ -159,13 +198,15 @@ function Navbar() {
           >
             Contact
           </NavLink>
-          <NavLink
+          <a
             onClick={() => setVisible(false)}
             className="py-2 pl-6 border"
-            to="https://forever-admin-omega-liard.vercel.app/"
+            href={adminUrl}
+            target="_blank"
+            rel="noreferrer"
           >
             Admin Panel
-          </NavLink>
+          </a>
         </div>
       </div>
     </div>

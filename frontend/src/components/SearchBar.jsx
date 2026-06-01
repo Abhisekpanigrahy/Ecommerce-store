@@ -8,15 +8,15 @@ const SearchBar = () => {
   const { search, setSearch, showSearch, setShowSearch } =
     useContext(ShopContext);
   const [visible, setVisible] = useState(false);
-  const locatiion = useLocation();
+  const location = useLocation();
 
   useEffect(() => {
-    if (locatiion.pathname.includes("collection")) {
+    if (location.pathname.includes("collection")) {
       setVisible(true);
     } else {
       setVisible(false);
     }
-  }, [locatiion]);
+  }, [location]);
 
   return showSearch && visible ? (
     <div className="border-t border-b bg-gray-50 text-center">
@@ -28,7 +28,7 @@ const SearchBar = () => {
           type="text"
           placeholder="Search"
         />
-        <img onClick={() => setShowSearch(true)} className="w-4 cursor-pointer" src={assets.search_icon} alt="icon" />
+        <img className="w-4" src={assets.search_icon} alt="icon" />
       </div>
       <img
         onClick={() => setShowSearch(false)}

@@ -101,7 +101,10 @@ const registerUser = async (req, res) => {
 const adminLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
-        if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+        const adminEmail = process.env.ADMIN_EMAIL?.trim().replace(/^["']|["']$/g, '');
+        const adminPassword = process.env.ADMIN_PASSWORD?.trim().replace(/^["']|["']$/g, '');
+
+        if (email.trim() === adminEmail && password === adminPassword) {
             const token = jwt.sign(email + password, process.env.JWT_SECRET);
             res.json({ success: true, token });
         } else {
@@ -113,4 +116,20 @@ const adminLogin = async (req, res) => {
     }
 }
 
-export { loginUser, registerUser, adminLogin };
+const getUserProfile = async (req, res) => {
+    try {
+        const userId = req.userId || req.body.userId;
+        const user = await userModel.findById(userId).select('-password');
+
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+
+        res.json({ success: true, user });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { loginUser, registerUser, adminLogin, getUserProfile };

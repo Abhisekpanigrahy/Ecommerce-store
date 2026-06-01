@@ -144,27 +144,18 @@ const ShopContextProvider = (props) => {
         const productsWithImages = response.data.products.map((product, index) => {
           const images = Array.isArray(product.image) ? product.image : [];
           
-          // Check if the first image is a valid remote URL (not localhost)
+          // Check if images contain a valid remote URL (like Cloudinary)
           const isRemoteImage = images.length > 0 && 
                                images[0] && 
                                (images[0].startsWith('http') || images[0].startsWith('https')) && 
                                !images[0].includes('localhost');
 
-          // If it's a local/localhost image from the DB, we try to fix it using backendUrl
-          const fixedImages = images.map(img => {
-            if (!img) return img;
-            if (img.includes('localhost') || img.startsWith('/uploads')) {
-              const path = img.split('/uploads/')[1] || img.replace('/uploads/', '');
-              return `${backendUrl}/uploads/${path}`;
-            }
-            return img;
-          });
-
-          // Final check: if we have a valid remote image or we successfully fixed a local one
-          const hasImage = fixedImages.length > 0 && fixedImages[0] && !fixedImages[0].includes('undefined');
+          // If it's not a remote image, or if it's a local path, we use local fallback
+          // This ensures images always show up even if the database has local paths
+          const hasImage = isRemoteImage;
 
           return hasImage
-            ? { ...product, image: fixedImages }
+            ? { ...product, image: images }
             : {
                 ...product,
                 image: localProducts[index % localProducts.length].image,

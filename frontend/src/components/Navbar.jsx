@@ -159,11 +159,11 @@ function Navbar() {
 
       {/* sidebar menu for small screen basically for mobile */}
       <div
-        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${
-          visible ? "w-full" : "w-0"
+        className={`fixed inset-0 z-50 bg-white shadow-xl sm:hidden transform transition-all duration-300 ${
+          visible ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col text-gray-600">
+        <div className="flex h-full flex-col text-gray-600 overflow-y-auto">
           <div
             onClick={() => setVisible(false)}
             className="flex items-center gap-4 p-3 cursor-pointer"

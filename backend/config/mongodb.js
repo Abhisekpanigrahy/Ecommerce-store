@@ -10,7 +10,8 @@ const connectDB = async () => {
             console.error('MongoDB connection error:', err);
         });
 
-        mongoose.set('bufferCommands', false);
+        // Enable buffering again to handle initial connection delay gracefully
+        mongoose.set('bufferCommands', true);
 
         if (!process.env.MONGODB_URL) {
             throw new Error("MONGODB_URL is not defined in environment variables");
@@ -22,9 +23,9 @@ const connectDB = async () => {
             : `${process.env.MONGODB_URL}/e-commerce`;
 
         await mongoose.connect(connectionUrl, {
-            serverSelectionTimeoutMS: 5000, // Keep trying to connect for 5 seconds
-            socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-            family: 4 // Use IPv4, skip trying IPv6
+            serverSelectionTimeoutMS: 10000, // Increase to 10 seconds
+            socketTimeoutMS: 45000,
+            family: 4
         });
     } catch (error) {
         console.error("Failed to connect to MongoDB:", error.message);

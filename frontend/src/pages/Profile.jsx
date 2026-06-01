@@ -138,7 +138,7 @@ const Profile = () => {
         <div className="flex gap-4 mt-10">
           <button
             onClick={handleProfileUpdate}
-            className="bg-accent text-white px-12 py-3 text-sm uppercase tracking-widest hover:shadow-lg transition-all"
+            className="bg-black text-white px-12 py-3 text-sm uppercase tracking-widest hover:bg-gray-800 transition-all"
           >
             Save
           </button>
@@ -150,7 +150,7 @@ const Profile = () => {
               setCartItems({});
               navigate('/login');
             }}
-            className="border border-accent text-accent px-8 py-3 text-sm uppercase tracking-widest hover:bg-accent hover:text-white transition-all"
+            className="border border-black px-8 py-3 text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-all"
           >
             Logout
           </button>

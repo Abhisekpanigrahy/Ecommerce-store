@@ -22,7 +22,10 @@ connectCloudinary();
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors());
-app.use('/uploads', express.static('uploads'));
+
+// Safe static file serving
+const uploadPath = process.env.VERCEL ? '/tmp/uploads' : 'uploads';
+app.use('/uploads', express.static(uploadPath));
 
 
 

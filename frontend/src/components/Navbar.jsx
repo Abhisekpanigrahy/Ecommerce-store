@@ -157,62 +157,70 @@ function Navbar() {
         />
       </div>
 
-      {/* sidebar menu for small screen basically for mobile */}
-      <div
-        className={`fixed inset-0 z-50 bg-white shadow-xl sm:hidden transform transition-all duration-300 ${
-          visible ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"
-        }`}
-      >
-        <div className="flex h-full flex-col text-gray-600 overflow-y-auto">
-          <div
-            onClick={() => setVisible(false)}
-            className="flex items-center gap-4 p-3 cursor-pointer"
-          >
-            <img
-              className="h-4 rotate-180"
-              src={assets.dropdown_icon}
-              alt="close_icon"
-            />
-            <p>Back</p>
+      {/* mobile menu overlay */}
+      <div className={`fixed inset-0 z-50 sm:hidden ${visible ? "block" : "hidden"}`}>
+        <div
+          className="absolute inset-0 bg-black/30"
+          onClick={() => setVisible(false)}
+        />
+        <div className="absolute inset-0 bg-white p-6 overflow-y-auto">
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-lg font-semibold">Menu</p>
+            <button
+              type="button"
+              onClick={() => setVisible(false)}
+              className="text-2xl font-semibold"
+            >
+              ×
+            </button>
           </div>
 
           <NavLink
             onClick={() => setVisible(false)}
-            className="py-2 pl-6 border"
+            className="block py-4 border-b text-lg font-medium"
             to="/"
           >
             Home
           </NavLink>
           <NavLink
             onClick={() => setVisible(false)}
-            className="py-2 pl-6 border"
+            className="block py-4 border-b text-lg font-medium"
             to="/collection"
           >
             Collection
           </NavLink>
           <NavLink
             onClick={() => setVisible(false)}
-            className="py-2 pl-6 border"
-            to="/about"
+            className="block py-4 border-b text-lg font-medium"
+            to="/orders"
           >
-            About
+            Orders
           </NavLink>
           <NavLink
             onClick={() => setVisible(false)}
-            className="py-2 pl-6 border"
+            className="block py-4 border-b text-lg font-medium"
+            to="/about"
+          >
+            About Us
+          </NavLink>
+          <NavLink
+            onClick={() => setVisible(false)}
+            className="block py-4 border-b text-lg font-medium"
             to="/contact"
           >
-            Contact
+            Contact Us
           </NavLink>
-          <a
-            onClick={() => setVisible(false)}
-            className="py-2 pl-6 border"
-            href={adminUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Admin Panel
-          </a>
+          {adminUrl && (
+            <a
+              onClick={() => setVisible(false)}
+              className="block py-4 border-b text-lg font-medium"
+              href={adminUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Admin Panel
+            </a>
+          )}
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { assets } from "./../assets/assets";
 import { Link, NavLink } from "react-router-dom";
 import { useContext, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ShopContext } from "../context/ShopContext";
 
 function Navbar() {
@@ -49,181 +50,229 @@ function Navbar() {
         setProfileOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
 
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    document.body.style.overflow = visible ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [visible]);
+
   return (
-    <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 flex items-center justify-between py-5 font-medium">
-      <Link to={"/"} className="flex items-center gap-1">
-        <p className="text-2xl font-bold tracking-tighter text-gray-800 uppercase">ELITE WEAR<span className="text-pink-500">.</span></p>
-      </Link>
-
-      <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
-        <NavLink to="/" className="flex flex-col items-center gap-1">
-          <p>HOME</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </NavLink>
-        <NavLink to="/collection" className="flex flex-col items-center gap-1">
-          <p>COLLECTION</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </NavLink>
-        <NavLink to="/about" className="flex flex-col items-center gap-1">
-          <p>ABOUT</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </NavLink>
-        <NavLink to="/contact" className="flex flex-col items-center gap-1">
-          <p>CONTACT</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </NavLink>
-
-        {adminUrl && (
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={adminUrl}
-            className="flex flex-col items-center gap-1 "
-          >
-            <span className="border px-5 text-sm py-1 rounded-full -mt-1">
-              Admin Panel
-            </span>
-            <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-          </a>
-        )}
-      </ul>
-
-      <div className="flex items-center gap-6">
-        <img
-          onClick={openSearch}
-          src={assets.search_icon}
-          className="w-5 h-5 cursor-pointer object-contain"
-          alt="searchIcon"
-        />
-
-        <div ref={profileRef} className="relative group">
-          <img
-            onClick={handleProfileClick}
-            src={(token && userData?.image) ? userData.image : assets.profile_icon}
-            className={`w-5 h-5 cursor-pointer ${(token && userData?.image) ? 'rounded-full object-cover' : 'object-contain'}`}
-            alt="profileIcon"
-          />
-
-          {/* dropdown menu for profile icon */}
-          {token && profileOpen && (
-            <div className="absolute dropdown-menu right-0 pt-4 z-50">
-              <div className="flex flex-col gap-2 w-40 py-3 px-5 bg-slate-100 text-gray-600 rounded shadow-sm">
-                <p
-                  onClick={() => {
-                    navigate("/profile");
-                    setProfileOpen(false);
-                  }}
-                  className="cursor-pointer hover:text-black"
-                >
-                  My Profile
-                </p>
-                <p
-                  onClick={() => {
-                    navigate("/orders");
-                    setProfileOpen(false);
-                  }}
-                  className="cursor-pointer hover:text-black"
-                >
-                  Orders
-                </p>
-                <p onClick={logout} className="cursor-pointer hover:text-black">
-                  Logout
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* card icon start */}
-        <Link to="/cart" className="relative">
-          <img src={assets.cart_icon} className="w-5 min-w-5" alt="cartIco" />
-          <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
-            {getCartCount()}
+    <>
+      {/* ── Navbar bar ── */}
+      <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 flex items-center justify-between py-5 font-medium">
+        <Link to={"/"} className="flex items-center gap-1">
+          <p className="text-2xl font-bold tracking-tighter text-gray-800 uppercase">
+            ELITE WEAR<span className="text-pink-500">.</span>
           </p>
         </Link>
-        {/* card icon end */}
 
-        {/* mobile responsive menu icon */}
-        <img
-          onClick={() => setVisible(true)}
-          src={assets.menu_icon}
-          alt="menu_icon"
-          className="w-5 cursor-pointer sm:hidden"
-        />
-      </div>
-
-      {/* mobile menu overlay */}
-      <div className={`fixed inset-0 z-50 sm:hidden ${visible ? "block" : "hidden"}`}>
-        <div
-          className="absolute inset-0 bg-black/30"
-          onClick={() => setVisible(false)}
-        />
-        <div className="absolute inset-0 bg-white p-6 overflow-y-auto">
-          <div className="flex items-center justify-between mb-6">
-            <p className="text-lg font-semibold">Menu</p>
-            <button
-              type="button"
-              onClick={() => setVisible(false)}
-              className="text-2xl font-semibold"
-            >
-              ×
-            </button>
-          </div>
-
-          <NavLink
-            onClick={() => setVisible(false)}
-            className="block py-4 border-b text-lg font-medium"
-            to="/"
-          >
-            Home
+        {/* Desktop nav links */}
+        <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
+          <NavLink to="/" className="flex flex-col items-center gap-1">
+            <p>HOME</p>
+            <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
           </NavLink>
-          <NavLink
-            onClick={() => setVisible(false)}
-            className="block py-4 border-b text-lg font-medium"
-            to="/collection"
-          >
-            Collection
+          <NavLink to="/collection" className="flex flex-col items-center gap-1">
+            <p>COLLECTION</p>
+            <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
           </NavLink>
-          <NavLink
-            onClick={() => setVisible(false)}
-            className="block py-4 border-b text-lg font-medium"
-            to="/orders"
-          >
-            Orders
+          <NavLink to="/about" className="flex flex-col items-center gap-1">
+            <p>ABOUT</p>
+            <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
           </NavLink>
-          <NavLink
-            onClick={() => setVisible(false)}
-            className="block py-4 border-b text-lg font-medium"
-            to="/about"
-          >
-            About Us
-          </NavLink>
-          <NavLink
-            onClick={() => setVisible(false)}
-            className="block py-4 border-b text-lg font-medium"
-            to="/contact"
-          >
-            Contact Us
+          <NavLink to="/contact" className="flex flex-col items-center gap-1">
+            <p>CONTACT</p>
+            <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
           </NavLink>
           {adminUrl && (
             <a
-              onClick={() => setVisible(false)}
-              className="block py-4 border-b text-lg font-medium"
-              href={adminUrl}
               target="_blank"
               rel="noreferrer"
+              href={adminUrl}
+              className="flex flex-col items-center gap-1"
             >
-              Admin Panel
+              <span className="border px-5 text-sm py-1 rounded-full -mt-1">
+                Admin Panel
+              </span>
+              <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
             </a>
           )}
+        </ul>
+
+        {/* Icons */}
+        <div className="flex items-center gap-6">
+          <img
+            onClick={openSearch}
+            src={assets.search_icon}
+            className="w-5 h-5 cursor-pointer object-contain"
+            alt="searchIcon"
+          />
+
+          {/* Profile */}
+          <div ref={profileRef} className="relative group">
+            <img
+              onClick={handleProfileClick}
+              src={token && userData?.image ? userData.image : assets.profile_icon}
+              className={`w-5 h-5 cursor-pointer ${
+                token && userData?.image ? "rounded-full object-cover" : "object-contain"
+              }`}
+              alt="profileIcon"
+            />
+            {token && profileOpen && (
+              <div className="absolute dropdown-menu right-0 pt-4 z-50">
+                <div className="flex flex-col gap-2 w-40 py-3 px-5 bg-slate-100 text-gray-600 rounded shadow-sm">
+                  <p
+                    onClick={() => { navigate("/profile"); setProfileOpen(false); }}
+                    className="cursor-pointer hover:text-black"
+                  >
+                    My Profile
+                  </p>
+                  <p
+                    onClick={() => { navigate("/orders"); setProfileOpen(false); }}
+                    className="cursor-pointer hover:text-black"
+                  >
+                    Orders
+                  </p>
+                  <p onClick={logout} className="cursor-pointer hover:text-black">
+                    Logout
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Cart */}
+          <Link to="/cart" className="relative">
+            <img src={assets.cart_icon} className="w-5 min-w-5" alt="cartIco" />
+            <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
+              {getCartCount()}
+            </p>
+          </Link>
+
+          {/* Hamburger – mobile only */}
+          <img
+            onClick={() => setVisible(true)}
+            src={assets.menu_icon}
+            alt="menu_icon"
+            className="w-5 cursor-pointer sm:hidden"
+          />
         </div>
       </div>
-    </div>
+
+      {/* ── Mobile drawer – rendered via portal directly into <body> ── */}
+      {visible &&
+        createPortal(
+          <div
+            style={{ position: "fixed", inset: 0, zIndex: 9999 }}
+            className="sm:hidden"
+          >
+            {/* Backdrop */}
+            <div
+              style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }}
+              onClick={() => setVisible(false)}
+            />
+
+            {/* Drawer panel */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                height: "100%",
+                width: "75%",
+                maxWidth: "320px",
+                background: "#fff",
+                display: "flex",
+                flexDirection: "column",
+                overflowY: "auto",
+                boxShadow: "-4px 0 20px rgba(0,0,0,0.15)",
+              }}
+            >
+              {/* Header */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "20px 24px",
+                  borderBottom: "1px solid #e5e7eb",
+                }}
+              >
+                <span style={{ fontSize: "18px", fontWeight: 600 }}>Menu</span>
+                <button
+                  type="button"
+                  onClick={() => setVisible(false)}
+                  style={{
+                    fontSize: "28px",
+                    lineHeight: 1,
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#374151",
+                  }}
+                  aria-label="Close menu"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Nav links */}
+              <nav style={{ display: "flex", flexDirection: "column", padding: "8px 0" }}>
+                {[
+                  { to: "/", label: "Home" },
+                  { to: "/collection", label: "Collection" },
+                  { to: "/orders", label: "Orders" },
+                  { to: "/about", label: "About Us" },
+                  { to: "/contact", label: "Contact Us" },
+                ].map(({ to, label }) => (
+                  <NavLink
+                    key={to}
+                    to={to}
+                    onClick={() => setVisible(false)}
+                    style={({ isActive }) => ({
+                      display: "block",
+                      padding: "16px 24px",
+                      borderBottom: "1px solid #e5e7eb",
+                      borderLeft: isActive ? "3px solid #000" : "3px solid transparent",
+                      fontSize: "15px",
+                      fontWeight: isActive ? 600 : 500,
+                      color: isActive ? "#fff" : "#374151",
+                      textDecoration: "none",
+                      background: isActive ? "#000" : "transparent",
+                    })}
+                  >
+                    {label}
+                  </NavLink>
+                ))}
+                {adminUrl && (
+                  <a
+                    href={adminUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => setVisible(false)}
+                    style={{
+                      display: "block",
+                      padding: "16px 24px",
+                      borderBottom: "1px solid #f3f4f6",
+                      fontSize: "15px",
+                      fontWeight: 500,
+                      color: "#374151",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Admin Panel
+                  </a>
+                )}
+              </nav>
+            </div>
+          </div>,
+          document.body
+        )}
+    </>
   );
 }
 

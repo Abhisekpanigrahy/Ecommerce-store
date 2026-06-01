@@ -26,9 +26,4 @@ a.active hr {
 
 
 
-@media (max-width:648px) {
-    a.active {
-        background-color: black;
-        color: white;
-    }
-}
+/* Active state highlight is handled per-component via NavLink style prop */

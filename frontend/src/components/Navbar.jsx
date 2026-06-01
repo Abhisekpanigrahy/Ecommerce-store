@@ -7,7 +7,7 @@ function Navbar() {
   const [visible, setVisible] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
-  const adminUrl = import.meta.env.VITE_ADMIN_URL || "http://localhost:5177";
+  const adminUrl = import.meta.env.VITE_ADMIN_URL;
 
   const {
     setShowSearch,
@@ -77,17 +77,19 @@ function Navbar() {
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
 
-        <a
-          target="_blank"
-          rel="noreferrer"
-          href={adminUrl}
-          className="flex flex-col items-center gap-1 "
-        >
-          <span className="border px-5 text-sm py-1 rounded-full -mt-1">
-            Admin Panel
-          </span>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </a>
+        {adminUrl && (
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href={adminUrl}
+            className="flex flex-col items-center gap-1 "
+          >
+            <span className="border px-5 text-sm py-1 rounded-full -mt-1">
+              Admin Panel
+            </span>
+            <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+          </a>
+        )}
       </ul>
 
       <div className="flex items-center gap-6">

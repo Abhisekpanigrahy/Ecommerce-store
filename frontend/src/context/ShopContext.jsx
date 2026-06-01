@@ -142,30 +142,29 @@ const ShopContextProvider = (props) => {
 
       if (response.data.success) {
         const productsWithImages = response.data.products.map((product, index) => {
-          // Clean up image URLs
-          const cleanedImages = Array.isArray(product.image) 
-            ? product.image.map(img => {
-                if (!img) return img;
-                // If it's a relative path starting with /uploads, prepend backendUrl
-                if (img.startsWith('/uploads')) {
-                  return backendUrl + img;
-                }
-                // If it's a localhost URL but we're on a production domain, fix it
-                if (img.includes('localhost') && !window.location.hostname.includes('localhost')) {
-                  const path = img.split('/uploads/')[1];
-                  return path ? `${backendUrl}/uploads/${path}` : img;
-                }
-                return img;
-              })
-            : [];
+          const images = Array.isArray(product.image) ? product.image : [];
+          
+          // Check if the first image is a valid remote URL (not localhost)
+          const isRemoteImage = images.length > 0 && 
+                               images[0] && 
+                               (images[0].startsWith('http') || images[0].startsWith('https')) && 
+                               !images[0].includes('localhost');
 
-          const hasValidImage =
-            cleanedImages.length > 0 &&
-            cleanedImages[0] &&
-            !cleanedImages[0].includes("via.placeholder.com");
+          // If it's a local/localhost image from the DB, we try to fix it using backendUrl
+          const fixedImages = images.map(img => {
+            if (!img) return img;
+            if (img.includes('localhost') || img.startsWith('/uploads')) {
+              const path = img.split('/uploads/')[1] || img.replace('/uploads/', '');
+              return `${backendUrl}/uploads/${path}`;
+            }
+            return img;
+          });
 
-          return hasValidImage
-            ? { ...product, image: cleanedImages }
+          // Final check: if we have a valid remote image or we successfully fixed a local one
+          const hasImage = fixedImages.length > 0 && fixedImages[0] && !fixedImages[0].includes('undefined');
+
+          return hasImage
+            ? { ...product, image: fixedImages }
             : {
                 ...product,
                 image: localProducts[index % localProducts.length].image,

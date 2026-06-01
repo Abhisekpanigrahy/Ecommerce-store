@@ -142,22 +142,19 @@ const ShopContextProvider = (props) => {
       const response = await axios.get(backendUrl + "/api/product/list");
 
       if (response.data.success) {
-        const productsWithImages = response.data.products.map((product) => {
-          const images = Array.isArray(product.image) ? product.image : [];
-          
-          // Check if images contain a valid remote URL (like Cloudinary)
-          const isRemoteImage = images.length > 0 && 
-                               images[0] && 
-                               (images[0].startsWith('http') || images[0].startsWith('https')) && 
-                               !images[0].includes('localhost');
+        const productsWithImages = response.data.products.map((product, index) => {
+            const hasRemoteImage =
+              Array.isArray(product.image) &&
+              product.image.length > 0 &&
+              Boolean(product.image[0]);
 
-          // If it's a valid remote image, use it. Otherwise, use a safe fallback.
-          return isRemoteImage
-            ? { ...product, image: images }
-            : {
-                ...product,
-                image: localProducts.find(lp => lp.name === product.name)?.image || localProducts[0].image
-              };
+            // Use remote image if present; fallback to local asset only when image missing or empty
+            return hasRemoteImage
+              ? product
+              : {
+                  ...product,
+                  image: localProducts[index % localProducts.length].image,
+                };
         });
 
         setProducts(productsWithImages);

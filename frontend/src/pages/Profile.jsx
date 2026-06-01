@@ -6,10 +6,10 @@ import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 
 const Profile = () => {
-  const { backendUrl, token, setToken, navigate, getUserData, setUserData, setCartItems } = useContext(ShopContext);
-  const [profile, setProfile] = useState(null);
+  const { backendUrl, token, setToken, navigate, getUserData, userData, setUserData, setCartItems } = useContext(ShopContext);
+  const [profile, setProfile] = useState(userData);
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ name: "" });
+  const [editData, setEditData] = useState({ name: userData?.name || "" });
 
   const loadProfile = async () => {
     if (!token) {
@@ -26,6 +26,8 @@ const Profile = () => {
 
       if (response.data.success) {
         setProfile(response.data.user);
+        setUserData(response.data.user);
+        localStorage.setItem("userData", JSON.stringify(response.data.user));
         setEditData({ name: response.data.user.name });
       } else {
         toast.error(response.data.message);
@@ -37,6 +39,10 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    if (userData) {
+      setProfile(userData);
+      setEditData({ name: userData.name });
+    }
     loadProfile();
   }, [backendUrl, token, navigate]);
 

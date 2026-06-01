@@ -21,8 +21,8 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
 
   const [products, setProducts] = useState(localProducts);
-  const [token, setToken] = useState("");
-  const [userData, setUserData] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [userData, setUserData] = useState(JSON.parse(localStorage.getItem("userData")) || null);
 
   const navigate = useNavigate();
 
@@ -35,6 +35,7 @@ const ShopContextProvider = (props) => {
       );
       if (response.data.success) {
         setUserData(response.data.user);
+        localStorage.setItem("userData", JSON.stringify(response.data.user));
       }
     } catch (error) {
       console.log(error);

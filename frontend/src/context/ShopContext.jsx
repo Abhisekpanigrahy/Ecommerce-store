@@ -142,14 +142,30 @@ const ShopContextProvider = (props) => {
 
       if (response.data.success) {
         const productsWithImages = response.data.products.map((product, index) => {
-          const hasRemoteImage =
-            Array.isArray(product.image) &&
-            product.image.length > 0 &&
-            product.image[0] &&
-            !product.image[0].includes("via.placeholder.com");
+          // Clean up image URLs
+          const cleanedImages = Array.isArray(product.image) 
+            ? product.image.map(img => {
+                if (!img) return img;
+                // If it's a relative path starting with /uploads, prepend backendUrl
+                if (img.startsWith('/uploads')) {
+                  return backendUrl + img;
+                }
+                // If it's a localhost URL but we're on a production domain, fix it
+                if (img.includes('localhost') && !window.location.hostname.includes('localhost')) {
+                  const path = img.split('/uploads/')[1];
+                  return path ? `${backendUrl}/uploads/${path}` : img;
+                }
+                return img;
+              })
+            : [];
 
-          return hasRemoteImage
-            ? product
+          const hasValidImage =
+            cleanedImages.length > 0 &&
+            cleanedImages[0] &&
+            !cleanedImages[0].includes("via.placeholder.com");
+
+          return hasValidImage
+            ? { ...product, image: cleanedImages }
             : {
                 ...product,
                 image: localProducts[index % localProducts.length].image,

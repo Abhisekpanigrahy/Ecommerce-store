@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import validator from 'validator';
 
 const subscribeNewsletter = async (req, res) => {
+    console.log(">>> SUBSCRIBE REQUEST RECEIVED for:", req.body.email);
     try {
         const { email } = req.body;
 
@@ -21,15 +22,31 @@ const subscribeNewsletter = async (req, res) => {
         const smtpUser = SMTP_USER.trim();
         const smtpPass = SMTP_PASS.replace(/\s/g, '');
 
-        const transporter = nodemailer.createTransport({
-            host: SMTP_HOST,
-            port: Number(SMTP_PORT),
-            secure: SMTP_SECURE === 'true',
-            auth: {
-                user: smtpUser,
-                pass: smtpPass,
-            },
-        });
+        // Debug logs to verify .env is loading (you can remove these after testing)
+        console.log("DEBUG: SMTP_USER:", smtpUser);
+        console.log("DEBUG: SMTP_PASS length:", smtpPass.length);
+        console.log("DEBUG: SMTP_PASS (masked):", smtpPass.substring(0, 4) + "****" + smtpPass.substring(smtpPass.length - 4));
+
+        // Use service: 'gmail' if host is gmail, otherwise use host/port
+        const transporterConfig = SMTP_HOST.includes('gmail.com') 
+            ? {
+                service: 'gmail',
+                auth: {
+                    user: smtpUser,
+                    pass: smtpPass,
+                },
+            }
+            : {
+                host: SMTP_HOST,
+                port: Number(SMTP_PORT),
+                secure: SMTP_SECURE === 'true',
+                auth: {
+                    user: smtpUser,
+                    pass: smtpPass,
+                },
+            };
+
+        const transporter = nodemailer.createTransport(transporterConfig);
 
         await transporter.sendMail({
             from: SMTP_FROM || smtpUser,
@@ -50,9 +67,13 @@ const subscribeNewsletter = async (req, res) => {
         res.json({ success: true, message: 'Subscription email sent successfully' });
     } catch (error) {
         console.log(error);
-        const message = error.responseCode === 535
-            ? 'Gmail rejected the SMTP login. Use a 16-character app password for the same Gmail account in SMTP_USER.'
-            : error.message;
+        let message = error.message;
+
+        if (error.responseCode === 535 || error.message.includes('535') || error.message.includes('Invalid login')) {
+            message = 'SMTP Authentication Failed: Gmail rejected the login. If you are using Gmail, please use a 16-character "App Password" instead of your regular password. Ensure 2nd Step Verification is enabled in your Google Account.';
+        } else if (error.code === 'ECONNREFUSED') {
+            message = 'SMTP Connection Refused: Please check your SMTP_HOST and SMTP_PORT configuration.';
+        }
 
         res.json({ success: false, message });
     }

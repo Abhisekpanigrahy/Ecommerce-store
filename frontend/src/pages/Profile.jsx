@@ -3,38 +3,74 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Title from "../components/Title";
 import { ShopContext } from "../context/ShopContext";
+import { assets } from "../assets/assets";
 
 const Profile = () => {
   const { backendUrl, token, navigate } = useContext(ShopContext);
   const [profile, setProfile] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({ name: "" });
+
+  const loadProfile = async () => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        backendUrl + "/api/user/profile",
+        {},
+        { headers: { token } }
+      );
+
+      if (response.data.success) {
+        setProfile(response.data.user);
+        setEditData({ name: response.data.user.name });
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
-    const loadProfile = async () => {
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
-      try {
-        const response = await axios.post(
-          backendUrl + "/api/user/profile",
-          {},
-          { headers: { token } }
-        );
-
-        if (response.data.success) {
-          setProfile(response.data.user);
-        } else {
-          toast.error(response.data.message);
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error(error.message);
-      }
-    };
-
     loadProfile();
   }, [backendUrl, token, navigate]);
+
+  const handleProfileUpdate = async () => {
+    // Note: Profile update endpoint would need to be added to backend
+    // For now, focusing on the UI as requested
+    toast.info("Profile update functionality can be added here");
+    setIsEditing(false);
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // In a real app, upload to Cloudinary and get URL
+    // For now, we'll simulate or use a base64
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      try {
+        const response = await axios.post(
+          backendUrl + "/api/user/profile/update-pic",
+          { image: reader.result },
+          { headers: { token } }
+        );
+        if (response.data.success) {
+          toast.success("Profile picture updated");
+          loadProfile();
+        }
+      } catch (error) {
+        toast.error("Failed to update profile picture");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
     <div className="border-t pt-10">
@@ -42,29 +78,67 @@ const Profile = () => {
         <Title text1="MY" text2="PROFILE" />
       </div>
 
-      <div className="max-w-2xl mx-auto my-10 border border-gray-200 p-6 sm:p-8">
-        <p className="text-sm text-gray-500">Account details</p>
-        <h2 className="text-2xl font-medium mt-2">
-          {profile?.name || "Loading..."}
-        </h2>
+      <div className="max-w-2xl mx-auto my-10 border border-gray-200 p-6 sm:p-8 flex flex-col items-center">
+        <div className="relative group">
+          <img
+            src={profile?.image || assets.profile_icon}
+            className="w-32 h-32 rounded-full object-cover border-2 border-gray-100"
+            alt="Profile"
+          />
+          <label className="absolute bottom-0 right-0 bg-black text-white p-2 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+              <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
+            </svg>
+            <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
+          </label>
+        </div>
 
-        <div className="mt-6 space-y-4 text-gray-700">
-          <div>
-            <p className="text-xs uppercase text-gray-400">Email</p>
-            <p>{profile?.email || "Loading..."}</p>
+        <div className="w-full mt-8 space-y-6">
+          <div className="border-b pb-4">
+            <p className="text-xs uppercase text-gray-400 mb-1">Full Name</p>
+            {isEditing ? (
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={editData.name}
+                  onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                  className="border px-2 py-1 flex-1 outline-none"
+                />
+                <button onClick={handleProfileUpdate} className="text-sm bg-black text-white px-3 py-1">Save</button>
+                <button onClick={() => setIsEditing(false)} className="text-sm border px-3 py-1">Cancel</button>
+              </div>
+            ) : (
+              <div className="flex justify-between items-center">
+                <p className="text-xl font-medium">{profile?.name || "Loading..."}</p>
+                <button onClick={() => setIsEditing(true)} className="text-xs text-blue-600 underline">Edit</button>
+              </div>
+            )}
           </div>
-          <div>
-            <p className="text-xs uppercase text-gray-400">Customer ID</p>
-            <p className="break-all">{profile?._id || "Loading..."}</p>
+
+          <div className="border-b pb-4">
+            <p className="text-xs uppercase text-gray-400 mb-1">Email Address</p>
+            <p className="text-gray-700">{profile?.email || "Loading..."}</p>
           </div>
         </div>
 
-        <button
-          onClick={() => navigate("/orders")}
-          className="mt-8 bg-black text-white px-8 py-3 text-sm"
-        >
-          View Orders
-        </button>
+        <div className="flex gap-4 mt-10">
+          <button
+            onClick={() => navigate("/orders")}
+            className="bg-black text-white px-8 py-3 text-sm uppercase tracking-widest"
+          >
+            My Orders
+          </button>
+          <button
+            onClick={() => {
+              localStorage.removeItem('token');
+              navigate('/login');
+            }}
+            className="border border-black px-8 py-3 text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-all"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

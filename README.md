@@ -93,6 +93,12 @@ ADMIN_PASSWORD = "admin123"
 STRIPE_SECRET_KEY = your_stripe_secret_key
 RAZORPAY_KEY_SECRET = your_rasorpay_key_secret
 RAZORPAY_KEY_ID = your_rasorpay_key_id
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = 587
+SMTP_SECURE = "false"
+SMTP_USER = your_email@gmail.com
+SMTP_PASS = your_16_digit_app_password
+SMTP_FROM = your_email@gmail.com
 PORT=5000
 ```
 

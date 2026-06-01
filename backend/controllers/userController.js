@@ -132,4 +132,66 @@ const getUserProfile = async (req, res) => {
     }
 }
 
-export { loginUser, registerUser, adminLogin, getUserProfile };
+// Add Address
+const addAddress = async (req, res) => {
+    try {
+        const { userId, address } = req.body;
+        const user = await userModel.findById(userId);
+        
+        const addressWithId = { ...address, id: Date.now().toString() };
+        let addressData = user.addressData || [];
+        addressData.push(addressWithId);
+
+        await userModel.findByIdAndUpdate(userId, { addressData });
+        res.json({ success: true, message: "Address added successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// Update Address
+const updateAddress = async (req, res) => {
+    try {
+        const { userId, addressId, updatedAddress } = req.body;
+        const user = await userModel.findById(userId);
+        
+        let addressData = user.addressData.map(addr => addr.id === addressId ? { ...updatedAddress, id: addressId } : addr);
+
+        await userModel.findByIdAndUpdate(userId, { addressData });
+        res.json({ success: true, message: "Address updated successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// Delete Address
+const deleteAddress = async (req, res) => {
+    try {
+        const { userId, addressId } = req.body;
+        const user = await userModel.findById(userId);
+        
+        let addressData = user.addressData.filter(addr => addr.id !== addressId);
+
+        await userModel.findByIdAndUpdate(userId, { addressData });
+        res.json({ success: true, message: "Address deleted successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// Update Profile Picture
+const updateProfilePic = async (req, res) => {
+    try {
+        const { userId, image } = req.body;
+        await userModel.findByIdAndUpdate(userId, { image });
+        res.json({ success: true, message: "Profile picture updated" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { loginUser, registerUser, adminLogin, getUserProfile, addAddress, updateAddress, deleteAddress, updateProfilePic };

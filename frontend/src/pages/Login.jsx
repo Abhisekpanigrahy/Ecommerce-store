@@ -83,8 +83,7 @@ if(token){
 
 
 
-      <div className='w-full flex justify-between text-sm mt-[-8px]'>
-      <p className='cursor-pointer'>Forgot  your password?</p>
+      <div className='w-full flex justify-end text-sm mt-[-8px]'>
       {
         currentState === 'Login' ? 
         <p onClick={() => setCurrentState('Sign Up')} className='cursor-pointer'>Create an account</p> 

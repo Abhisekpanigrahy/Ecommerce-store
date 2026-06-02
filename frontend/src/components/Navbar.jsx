@@ -112,18 +112,41 @@ function Navbar() {
             alt="searchIcon"
           />
 
+          {/* Cart */}
+          <Link to="/cart" className="relative">
+            <img src={assets.cart_icon} className="w-5 min-w-5" alt="cartIco" />
+            <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
+              {getCartCount()}
+            </p>
+          </Link>
+
           {/* Profile */}
-          <div ref={profileRef} className="relative group">
+          <div ref={profileRef} className="relative group flex items-center gap-2">
             <img
               onClick={handleProfileClick}
               src={token && userData?.image ? userData.image : assets.profile_icon}
-              className={`w-5 h-5 cursor-pointer ${
-                token && userData?.image ? "rounded-full object-cover" : "object-contain"
+              className={`cursor-pointer ${
+                token && userData?.image ? "w-8 h-8 rounded-full object-cover" : "w-5 h-5 object-contain"
               }`}
               alt="profileIcon"
             />
+            {token ? (
+              <span
+                onClick={handleProfileClick}
+                className="text-sm font-medium text-gray-700 cursor-pointer hover:text-black whitespace-nowrap"
+              >
+                {userData?.name || "Profile"}
+              </span>
+            ) : (
+              <span
+                onClick={handleProfileClick}
+                className="text-sm text-gray-700 cursor-pointer hover:text-black"
+              >
+                Sign In
+              </span>
+            )}
             {token && profileOpen && (
-              <div className="absolute dropdown-menu right-0 pt-4 z-50">
+              <div className="absolute right-0 top-full mt-2 dropdown-menu z-50">
                 <div className="flex flex-col gap-2 w-40 py-3 px-5 bg-slate-100 text-gray-600 rounded shadow-sm">
                   <p
                     onClick={() => { navigate("/profile"); setProfileOpen(false); }}
@@ -144,14 +167,6 @@ function Navbar() {
               </div>
             )}
           </div>
-
-          {/* Cart */}
-          <Link to="/cart" className="relative">
-            <img src={assets.cart_icon} className="w-5 min-w-5" alt="cartIco" />
-            <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
-              {getCartCount()}
-            </p>
-          </Link>
 
           {/* Hamburger – mobile only */}
           <img

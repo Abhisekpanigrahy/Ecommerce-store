@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useLocation, useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Title from "../components/Title";
 import { ShopContext } from "../context/ShopContext";
@@ -7,8 +7,10 @@ import { ShopContext } from "../context/ShopContext";
 const TrackOrder = () => {
   const { backendUrl, token, currency } = useContext(ShopContext);
   const { orderId } = useParams();
-  const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const initialOrder = location.state?.order || null;
+  const [order, setOrder] = useState(initialOrder);
+  const [loading, setLoading] = useState(initialOrder ? false : true);
 
   const fetchOrder = async () => {
     if (!token || !orderId) {
@@ -40,8 +42,12 @@ const TrackOrder = () => {
   };
 
   useEffect(() => {
+    if (order) {
+      setLoading(false);
+      return;
+    }
     fetchOrder();
-  }, [backendUrl, token, orderId]);
+  }, [backendUrl, token, orderId, order]);
 
   if (loading) {
     return (

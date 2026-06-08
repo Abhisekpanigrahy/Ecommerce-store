@@ -19,6 +19,35 @@ a.active hr {
     font-style: normal;
 }
 
+@layer utilities {
+    .animate-fadeIn {
+        animation: fadeIn 1s ease-out forwards;
+    }
+    .animate-kenBurns {
+        animation: kenBurns 20s ease-in-out infinite alternate;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes kenBurns {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.15);
+    }
+}
+
 /* hide default scroll bar of product img */
 ::-webkit-scrollbar{
     display: none;

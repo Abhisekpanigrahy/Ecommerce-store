@@ -20,7 +20,11 @@ const ShopContextProvider = (props) => {
   // for products state
   const [cartItems, setCartItems] = useState({});
 
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(() => {
+    const cachedProducts = localStorage.getItem("products");
+    return cachedProducts ? JSON.parse(cachedProducts) : [];
+  });
+  const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [userData, setUserData] = useState(JSON.parse(localStorage.getItem("userData")) || null);
 
@@ -139,6 +143,7 @@ const ShopContextProvider = (props) => {
   // Fetch products data from the backend
   const getProductsData = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(backendUrl + "/api/product/list");
 
       if (response.data.success) {
@@ -181,16 +186,18 @@ const ShopContextProvider = (props) => {
         });
 
         setProducts(productsWithImages);
+        localStorage.setItem("products", JSON.stringify(productsWithImages));
       } else {
         console.log("API Error:", response.data.message);
         // Fallback to local products if API succeeds but returns error
-        setProducts(localProducts);
+        setProducts((prev) => prev.length > 0 ? prev : localProducts);
       }
     } catch (error) {
       console.log("Product fetch error:", error);
-      // Fallback to local products is already handled by initial state,
-      // but we ensure it here too.
-      setProducts(localProducts);
+      // Fallback to local products if no cache exists
+      setProducts((prev) => prev.length > 0 ? prev : localProducts);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -253,6 +260,7 @@ const ShopContextProvider = (props) => {
   const value = {
     products,
     setProducts,
+    loading,
     currency,
     delivery_fee,
     search,

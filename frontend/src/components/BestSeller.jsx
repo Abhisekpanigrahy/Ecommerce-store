@@ -5,13 +5,15 @@ import ProducItem from "./ProducItem";
 
 const BestSeller = () => {
 
-  const { products } = useContext(ShopContext);
+  const { products, loading } = useContext(ShopContext);
   const [bestSeller, setBestSeller] = useState([]);
 
   useEffect(() => {
-    // bestseller is the object key
-    const bestProduct = products.filter((item)=>(item.bestseller)); // if bestseller: true
-    setBestSeller(bestProduct.slice(0, 5));
+    if (products.length > 0) {
+      // bestseller is the object key
+      const bestProduct = products.filter((item)=>(item.bestseller)); // if bestseller: true
+      setBestSeller(bestProduct.slice(0, 5));
+    }
   }, [products]);
 
   return (
@@ -26,18 +28,29 @@ const BestSeller = () => {
       {/* rendering best products */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6">
         {
-        bestSeller.map((item, index) => (
-          <ProducItem
-            key={index}
-            id={item._id}
-            name={item.name}
-            image={item.image}
-            price={item.price}
-            sizes={item.sizes}
-            averageRating={item.averageRating}
-            reviewCount={item.reviewCount}
-          />
-        ))
+        bestSeller.length > 0 ? (
+          bestSeller.map((item, index) => (
+            <ProducItem
+              key={index}
+              id={item._id}
+              name={item.name}
+              image={item.image}
+              price={item.price}
+              sizes={item.sizes}
+              averageRating={item.averageRating}
+              reviewCount={item.reviewCount}
+            />
+          ))
+        ) : (
+          // Skeleton loaders
+          Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="animate-pulse">
+              <div className="bg-gray-200 h-[240px] w-full rounded-3xl mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          ))
+        )
         }
       </div>
 

@@ -46,7 +46,8 @@ const ProducItem = ({ id, image, name, price, averageRating = 0, reviewCount = 0
           <img
             className="h-[240px] w-full object-cover transition duration-500 ease-out group-hover:scale-105"
             src={image[0]}
-            alt="product_img"
+            alt={name}
+            loading="lazy"
           />
         </div>
 
